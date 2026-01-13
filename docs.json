@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "AtlasAI",
   "api": {
     "openapi": "api-reference/openapi.json"
   },
@@ -25,19 +25,29 @@
             ]
           },
           {
-            "group": "Customization",
+            "group": "Workspace and setup",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "guides/workspace-and-setup/data-sources",
+              "guides/workspace-and-setup/my-connectors",
+              "guides/workspace-and-setup/integrations"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Features",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "guides/features/overview",
+              "guides/features/agent-network",
+              "guides/features/atlas-pilot",
+              "guides/features/memory-graph",
+              "guides/features/tools-agent",
+              "guides/features/exhausts"
+            ]
+          },
+          {
+            "group": "Administration",
+            "pages": [
+              "guides/administration/settings",
+              "guides/administration/billing"
             ]
           },
           {
@@ -60,10 +70,9 @@
             ]
           },
           {
-      "group": "Reference",
-      "openapi": "api-reference/openapi.json"
-    }
-        
+            "group": "Reference",
+            "openapi": "api-reference/openapi.json"
+          }
         ]
       }
     ],
@@ -101,15 +110,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
