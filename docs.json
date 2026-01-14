@@ -92,7 +92,7 @@
   },
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/atlas logo.png"
+    "dark": "/logo/atlas.png"
   },
   "navbar": {
     "links": [
