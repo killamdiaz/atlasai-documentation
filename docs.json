@@ -6,9 +6,9 @@
     "openapi": "api-reference/openapi.json"
   },
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#491DCE",
+    "light": "#7955E7",
+    "dark": "#341594"
   },
   "favicon": "/favicon.svg",
   "navigation": {
