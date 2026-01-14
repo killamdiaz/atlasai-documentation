@@ -1,33 +1,126 @@
+# Atlas API
+
+Welcome to the **Atlas API reference**.
+
+Atlas is the backend that powers AtlasAI’s core capabilities—agent execution, workflows, memory, ingestion, connectors, and system administration—through a single HTTP API.
+
+Use this page to understand how to authenticate, what conventions we follow, and how to navigate the reference.
+
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+
+## Base URL
+
+Most production requests use:
+
+- **Production:** `https://api.atlasengine.ai`
+
+If you’re running locally (Docker/dev), the **paths stay the same**—only the host/port changes.
+
 ---
-
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
-
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Most endpoints require a **Bearer token**.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```bash
+curl -X GET "https://api.atlasengine.ai/healthz" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
 ```
+
+<Note>
+Some endpoints (like certain health checks) may be public, but you should assume authentication is required unless the endpoint explicitly says otherwise.
+</Note>
+
+---
+
+## Request format
+
+### JSON by default
+
+Most endpoints accept and return JSON.
+
+Use:
+
+- `Content-Type: application/json`
+- `Accept: application/json`
+
+Example:
+
+```bash
+curl -X POST "https://api.atlasengine.ai/<endpoint>" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"example": true}'
+```
+
+### IDs
+
+Many resources use UUID-style identifiers (e.g., `agentId`, `workflowId`, `conversationId`). Treat them as opaque strings.
+
+---
+
+## Responses & error handling
+
+### Common success codes
+
+- `200 OK` — successful read/update
+- `201 Created` — resource created (when applicable)
+- `204 No Content` — successful request with no response body (when applicable)
+
+### Common error codes
+
+- `400 Bad Request` — malformed request
+- `401 Unauthorized` — missing/invalid token
+- `403 Forbidden` — token is valid but lacks access
+- `404 Not Found` — resource doesn’t exist
+- `409 Conflict` — state conflict / duplicate
+- `422 Unprocessable Entity` — validation errors
+- `5xx` — server-side failure
+
+<Tip>
+When debugging, capture **(1)** the HTTP status code, **(2)** the response body, and **(3)** the request id / correlation id if your client captures it. Validation errors are usually explained in the response body.
+</Tip>
+
+---
+
+## Streaming endpoints
+
+Some endpoints may stream responses (for example, long-running chat/agent runs or event streams). These commonly use **Server-Sent Events (SSE)** (`text/event-stream`).
+
+If you’re calling a streaming endpoint:
+
+- Don’t try to parse the response as a single JSON object.
+- Use an SSE-capable client (browser `EventSource`, or a Node/Python streaming client).
+
+---
+
+## Navigating the API reference
+
+Endpoints are organized by **tags** (for example: Auth, Workflows, Agents, Memory, Ingestion, Connectors, System). Use the left sidebar to browse by area.
+
+<Card title="Browse the API Reference" icon="book-open-cover" href="/api-reference">
+Explore endpoints grouped by tags.
+</Card>
+
+---
+
+## Quick sanity check
+
+To verify connectivity:
+
+```bash
+curl -sS "https://api.atlasengine.ai/healthz"
+```
+
+---
+
+## Next steps
+
+- Start with the section that matches your integration:
+  - **Workflows**: build/run workflows
+  - **Agents**: run tool agents / sessions
+  - **Memory**: store/query context
+  - **Ingestion**: jobs, indexing, and search
+  - **Connectors**: OAuth + integrations
+
+If you tell me which 2–3 areas you’re documenting first (e.g., Workflows + Memory + Ingestion), I can tailor this intro with a recommended “happy path” flow and example calls.
