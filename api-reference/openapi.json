@@ -18,7 +18,7 @@
   "paths": {
     "/healthz": {
       "get": {
-        "description": "",
+        "description": "Returns a lightweight health signal for Atlas Engine.\n\nUse this endpoint for load balancers, uptime checks, and container orchestration probes. It is intentionally fast and does not validate external dependencies.\n\nThis endpoint is **public** and does not require authentication.",
         "responses": {
           "200": {
             "description": "OK"
@@ -28,7 +28,7 @@
           }
         },
         "security": [],
-        "summary": "List Healthz",
+        "summary": "Get System Healthz",
         "operationId": "get_healthz",
         "tags": [
           "System"
@@ -37,7 +37,7 @@
     },
     "/metrics": {
       "get": {
-        "description": "",
+        "description": "Returns operational metrics for Atlas Engine (Prometheus-compatible output).\n\nUse this to monitor request rates, latencies, and error patterns. Protect access in production since metrics can expose internal service behavior.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "responses": {
           "200": {
             "description": "OK"
@@ -46,7 +46,7 @@
             "description": "Bad Request"
           },
           "default": {
-            "description": ""
+            "description": "Response."
           }
         },
         "security": [
@@ -55,7 +55,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Metrics",
+        "summary": "Get System Metrics",
         "operationId": "get_metrics",
         "tags": [
           "System"
@@ -64,35 +64,39 @@
     },
     "/api/license/status": {
       "get": {
-        "description": "",
+        "description": "Get license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-license-key",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           }
         ],
         "responses": {
@@ -107,7 +111,7 @@
           }
         },
         "security": [],
-        "summary": "List Status",
+        "summary": "Get License License Status",
         "operationId": "get_api_license_status",
         "tags": [
           "License"
@@ -116,28 +120,31 @@
     },
     "/api/license/validate": {
       "post": {
-        "description": "",
+        "description": "Create license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "x-license-key",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -149,7 +156,7 @@
           }
         },
         "security": [],
-        "summary": "Create Validate",
+        "summary": "Create License License Validate",
         "operationId": "post_api_license_validate",
         "tags": [
           "License"
@@ -158,28 +165,31 @@
     },
     "/api/license/refresh": {
       "post": {
-        "description": "",
+        "description": "Create license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "x-license-key",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -191,7 +201,7 @@
           }
         },
         "security": [],
-        "summary": "Create Refresh",
+        "summary": "Create License License Refresh",
         "operationId": "post_api_license_refresh",
         "tags": [
           "License"
@@ -200,14 +210,15 @@
     },
     "/api/license/apply": {
       "post": {
-        "description": "",
+        "description": "Create license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -230,7 +241,7 @@
           }
         },
         "security": [],
-        "summary": "Create Apply",
+        "summary": "Create License License Apply",
         "operationId": "post_api_license_apply",
         "tags": [
           "License"
@@ -239,7 +250,7 @@
     },
     "/api/deployment/version": {
       "get": {
-        "description": "",
+        "description": "Get deployment metadata.\n\nUse these endpoints to verify which version/build of Atlas Engine is running, useful for debugging and support.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "responses": {
           "200": {
             "description": "OK"
@@ -254,7 +265,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Version",
+        "summary": "Get Deployment Deployment Version",
         "operationId": "get_api_deployment_version",
         "tags": [
           "Deployment"
@@ -263,7 +274,7 @@
     },
     "/.well-known/saml/metadata/{orgId}": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "orgId",
@@ -271,7 +282,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier."
           }
         ],
         "responses": {
@@ -282,11 +294,11 @@
             "description": "Bad Request"
           },
           "default": {
-            "description": ""
+            "description": "Response."
           }
         },
         "security": [],
-        "summary": "Get Metadata",
+        "summary": "Get Auth (saml) .well Known Saml Metadata Orgid",
         "operationId": "get__well_known_saml_metadata_orgid",
         "tags": [
           "Auth (SAML)"
@@ -295,7 +307,7 @@
     },
     "/auth/saml/config/{orgId}": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "orgId",
@@ -303,7 +315,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier."
           }
         ],
         "responses": {
@@ -315,14 +328,14 @@
           }
         },
         "security": [],
-        "summary": "Get Config",
+        "summary": "Get Auth (saml) Auth Saml Config Orgid",
         "operationId": "get_auth_saml_config_orgid",
         "tags": [
           "Auth (SAML)"
         ]
       },
       "put": {
-        "description": "",
+        "description": "Update the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "orgId",
@@ -330,7 +343,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier."
           }
         ],
         "responses": {
@@ -348,10 +362,12 @@
                 "type": "object",
                 "properties": {
                   "domains": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Domains value."
                   },
                   "idp_metadata_url": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Idp Metadata Url value."
                   }
                 }
               }
@@ -359,7 +375,7 @@
           }
         },
         "security": [],
-        "summary": "Update Config",
+        "summary": "Update Auth (saml) Auth Saml Config Orgid",
         "operationId": "put_auth_saml_config_orgid",
         "tags": [
           "Auth (SAML)"
@@ -368,14 +384,15 @@
     },
     "/auth/saml/discover": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "email",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Email address used for discovery, login, or identity matching."
           }
         ],
         "responses": {
@@ -387,7 +404,7 @@
           }
         },
         "security": [],
-        "summary": "List Discover",
+        "summary": "Get Auth (saml) Auth Saml Discover",
         "operationId": "get_auth_saml_discover",
         "tags": [
           "Auth (SAML)"
@@ -396,42 +413,47 @@
     },
     "/auth/saml/login": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "accept",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Accept parameter."
           },
           {
             "name": "host",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Host parameter."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "redirect",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Redirect URL to send the user to after completing authentication."
           },
           {
             "name": "email",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Email address used for discovery, login, or identity matching."
           }
         ],
         "responses": {
@@ -449,19 +471,24 @@
                 "type": "object",
                 "properties": {
                   "org_id": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Organization identifier used to scope the request."
                   },
                   "orgId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Or."
                   },
                   "email": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Email value."
                   },
                   "redirect": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Redirect value."
                   },
                   "relayState": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Relaystate value."
                   }
                 }
               }
@@ -469,7 +496,7 @@
           }
         },
         "security": [],
-        "summary": "Create Login",
+        "summary": "Create Auth (saml) Auth Saml Login",
         "operationId": "post_auth_saml_login",
         "tags": [
           "Auth (SAML)"
@@ -478,14 +505,15 @@
     },
     "/auth/saml/acs": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "accept",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Accept parameter."
           }
         ],
         "responses": {
@@ -503,13 +531,16 @@
                 "type": "object",
                 "properties": {
                   "SAMLResponse": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Samlresponse value."
                   },
                   "RelayState": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Relaystate value."
                   },
                   "org_id": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Organization identifier used to scope the request."
                   }
                 }
               }
@@ -517,7 +548,7 @@
           }
         },
         "security": [],
-        "summary": "Create Acs",
+        "summary": "Create Auth (saml) Auth Saml Acs",
         "operationId": "post_auth_saml_acs",
         "tags": [
           "Auth (SAML)"
@@ -526,14 +557,15 @@
     },
     "/auth/saml/idp-init": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "accept",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Accept parameter."
           }
         ],
         "responses": {
@@ -551,10 +583,12 @@
                 "type": "object",
                 "properties": {
                   "SAMLResponse": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Samlresponse value."
                   },
                   "RelayState": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Relaystate value."
                   }
                 }
               }
@@ -562,7 +596,7 @@
           }
         },
         "security": [],
-        "summary": "Create Idp Init",
+        "summary": "Create Auth (saml) Auth Saml Idp Init",
         "operationId": "post_auth_saml_idp_init",
         "tags": [
           "Auth (SAML)"
@@ -571,7 +605,7 @@
     },
     "/auth/saml/logout": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "responses": {
           "200": {
             "description": "OK"
@@ -584,7 +618,7 @@
           }
         },
         "security": [],
-        "summary": "Create Logout",
+        "summary": "Create Auth (saml) Auth Saml Logout",
         "operationId": "post_auth_saml_logout",
         "tags": [
           "Auth (SAML)"
@@ -593,7 +627,7 @@
     },
     "/auth/saml/slo": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "responses": {
           "200": {
             "description": "OK"
@@ -603,7 +637,7 @@
           }
         },
         "security": [],
-        "summary": "Create Slo",
+        "summary": "Create Auth (saml) Auth Saml Slo",
         "operationId": "post_auth_saml_slo",
         "tags": [
           "Auth (SAML)"
@@ -612,21 +646,23 @@
     },
     "/auth/saml/session": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Bearer token for authenticating the request (format: `Bearer <token>`)."
           },
           {
             "name": "cookie",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Session cookie (used when calling session-based auth endpoints)."
           }
         ],
         "responses": {
@@ -638,7 +674,7 @@
           }
         },
         "security": [],
-        "summary": "List Session",
+        "summary": "Get Auth (saml) Auth Saml Session",
         "operationId": "get_auth_saml_session",
         "tags": [
           "Auth (SAML)"
@@ -647,21 +683,23 @@
     },
     "/agents": {
       "post": {
-        "description": "",
+        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -681,28 +719,30 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Agents",
+        "summary": "Create Agents Agents",
         "operationId": "post_agents",
         "tags": [
           "Agents"
         ]
       },
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -719,7 +759,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Agents",
+        "summary": "Get Agents Agents",
         "operationId": "get_agents",
         "tags": [
           "Agents"
@@ -728,7 +768,7 @@
     },
     "/agents/{id}": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -736,21 +776,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -770,14 +813,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Agents",
+        "summary": "Get Agents Agents Id",
         "operationId": "get_agents_id",
         "tags": [
           "Agents"
         ]
       },
       "patch": {
-        "description": "",
+        "description": "Update agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -785,21 +828,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -819,14 +865,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Agents",
+        "summary": "Update Agents Agents Id",
         "operationId": "patch_agents_id",
         "tags": [
           "Agents"
         ]
       },
       "delete": {
-        "description": "",
+        "description": "Delete agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -834,21 +880,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -871,7 +920,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Delete Agents",
+        "summary": "Delete Agents Agents Id",
         "operationId": "delete_agents_id",
         "tags": [
           "Agents"
@@ -880,7 +929,7 @@
     },
     "/agents/{id}/task": {
       "post": {
-        "description": "",
+        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -888,21 +937,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -925,7 +977,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Task",
+        "summary": "Create Agents Agents Id Task",
         "operationId": "post_agents_id_task",
         "tags": [
           "Agents"
@@ -934,7 +986,7 @@
     },
     "/agents/{id}/memory": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -942,28 +994,32 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "limit",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Maximum number of items to return (used for pagination)."
           }
         ],
         "responses": {
@@ -983,7 +1039,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Memory",
+        "summary": "Get Agents Agents Id Memory",
         "operationId": "get_agents_id_memory",
         "tags": [
           "Agents"
@@ -992,7 +1048,7 @@
     },
     "/agents/{id}/status": {
       "patch": {
-        "description": "",
+        "description": "Update agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -1000,21 +1056,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1034,7 +1093,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Status",
+        "summary": "Update Agents Agents Id Status",
         "operationId": "patch_agents_id_status",
         "tags": [
           "Agents"
@@ -1043,28 +1102,31 @@
     },
     "/tasks": {
       "get": {
-        "description": "",
+        "description": "Get task execution and streaming results.\n\nUse these endpoints to list tasks, assign tasks, and subscribe to task output streams for real-time progress updates.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "status",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Filter results by status."
           }
         ],
         "responses": {
@@ -1081,7 +1143,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Tasks",
+        "summary": "Get Tasks Tasks",
         "operationId": "get_tasks",
         "tags": [
           "Tasks"
@@ -1090,7 +1152,7 @@
     },
     "/tasks/{taskId}/stream": {
       "get": {
-        "description": "",
+        "description": "Get task execution and streaming results.\n\nUse these endpoints to list tasks, assign tasks, and subscribe to task output streams for real-time progress updates.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "taskId",
@@ -1098,21 +1160,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the task."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1136,7 +1201,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Stream",
+        "summary": "Get Tasks Tasks Taskid Stream",
         "operationId": "get_tasks_taskid_stream",
         "tags": [
           "Tasks"
@@ -1145,21 +1210,23 @@
     },
     "/tasks/assign": {
       "post": {
-        "description": "",
+        "description": "Create task execution and streaming results.\n\nUse these endpoints to list tasks, assign tasks, and subscribe to task output streams for real-time progress updates.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1179,7 +1246,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Assign",
+        "summary": "Create Tasks Tasks Assign",
         "operationId": "post_tasks_assign",
         "tags": [
           "Tasks"
@@ -1188,28 +1255,31 @@
     },
     "/commands": {
       "post": {
-        "description": "",
+        "description": "Create Commands Commands.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -1233,10 +1303,12 @@
                 "type": "object",
                 "properties": {
                   "org_id": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Organization identifier used to scope the request."
                   },
                   "account_id": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Account identifier used to scope the request to a specific account."
                   }
                 }
               }
@@ -1249,7 +1321,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Commands",
+        "summary": "Create Commands Commands",
         "operationId": "post_commands",
         "tags": [
           "Commands"
@@ -1258,21 +1330,23 @@
     },
     "/agent-builder": {
       "post": {
-        "description": "",
+        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1292,7 +1366,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Agent Builder",
+        "summary": "Create Agent Builder Agent Builder",
         "operationId": "post_agent_builder",
         "tags": [
           "Agent Builder"
@@ -1301,21 +1375,23 @@
     },
     "/agent-builder/spec": {
       "post": {
-        "description": "",
+        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1332,7 +1408,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Spec",
+        "summary": "Create Agent Builder Agent Builder Spec",
         "operationId": "post_agent_builder_spec",
         "tags": [
           "Agent Builder"
@@ -1341,21 +1417,23 @@
     },
     "/agent-config/schema": {
       "post": {
-        "description": "",
+        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1372,7 +1450,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Schema",
+        "summary": "Create Agent Config Agent Config Schema",
         "operationId": "post_agent_config_schema",
         "tags": [
           "Agent Config"
@@ -1381,7 +1459,7 @@
     },
     "/agent-config/{agentId}": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "agentId",
@@ -1389,21 +1467,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the agent."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1423,14 +1504,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Agent Config",
+        "summary": "Get Agent Config Agent Config Agentid",
         "operationId": "get_agent_config_agentid",
         "tags": [
           "Agent Config"
         ]
       },
       "put": {
-        "description": "",
+        "description": "Update agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "agentId",
@@ -1438,21 +1519,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the agent."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1472,7 +1556,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Agent Config",
+        "summary": "Update Agent Config Agent Config Agentid",
         "operationId": "put_agent_config_agentid",
         "tags": [
           "Agent Config"
@@ -1481,21 +1565,23 @@
     },
     "/insights/overview": {
       "get": {
-        "description": "",
+        "description": "Get Insights Insights Overview.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1512,7 +1598,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Overview",
+        "summary": "Get Insights Insights Overview",
         "operationId": "get_insights_overview",
         "tags": [
           "Insights"
@@ -1521,42 +1607,47 @@
     },
     "/memory/graph": {
       "get": {
-        "description": "",
+        "description": "Get memory and retrieval features.\n\nUse these endpoints to inspect memory graphs, subscribe to memory update streams, or query memory-related state for debugging and observability.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-user-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "User identifier for scoping the request to a specific user."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "userId",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "User identifier for scoping the request to a specific user."
           }
         ],
         "responses": {
@@ -1573,7 +1664,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Graph",
+        "summary": "Get Memory Memory Graph",
         "operationId": "get_memory_graph",
         "tags": [
           "Memory"
@@ -1582,21 +1673,23 @@
     },
     "/memory/stream": {
       "get": {
-        "description": "",
+        "description": "Get memory and retrieval features.\n\nUse these endpoints to inspect memory graphs, subscribe to memory update streams, or query memory-related state for debugging and observability.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1620,7 +1713,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Stream",
+        "summary": "Get Memory Memory Stream",
         "operationId": "get_memory_stream",
         "tags": [
           "Memory"
@@ -1629,28 +1722,31 @@
     },
     "/meta-controller/approvals": {
       "get": {
-        "description": "",
+        "description": "Get Meta Controller Meta Controller Approvals.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "status",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Filter results by status."
           }
         ],
         "responses": {
@@ -1667,7 +1763,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Approvals",
+        "summary": "Get Meta Controller Meta Controller Approvals",
         "operationId": "get_meta_controller_approvals",
         "tags": [
           "Meta Controller"
@@ -1676,7 +1772,7 @@
     },
     "/meta-controller/approvals/{id}/resolve": {
       "post": {
-        "description": "",
+        "description": "Create Meta Controller Meta Controller Approvals Id Resolve.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -1684,21 +1780,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1715,7 +1814,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Resolve",
+        "summary": "Create Meta Controller Meta Controller Approvals Id Resolve",
         "operationId": "post_meta_controller_approvals_id_resolve",
         "tags": [
           "Meta Controller"
@@ -1724,28 +1823,31 @@
     },
     "/meta-controller/events": {
       "get": {
-        "description": "",
+        "description": "Get Meta Controller Meta Controller Events.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "limit",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Maximum number of items to return (used for pagination)."
           }
         ],
         "responses": {
@@ -1762,7 +1864,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Events",
+        "summary": "Get Meta Controller Meta Controller Events",
         "operationId": "get_meta_controller_events",
         "tags": [
           "Meta Controller"
@@ -1771,28 +1873,31 @@
     },
     "/meta-controller/conversation-graph": {
       "get": {
-        "description": "",
+        "description": "Get Meta Controller Meta Controller Conversation Graph.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "limit",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Maximum number of items to return (used for pagination)."
           }
         ],
         "responses": {
@@ -1809,7 +1914,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Conversation Graph",
+        "summary": "Get Meta Controller Meta Controller Conversation Graph",
         "operationId": "get_meta_controller_conversation_graph",
         "tags": [
           "Meta Controller"
@@ -1818,21 +1923,23 @@
     },
     "/multi-agent/sessions": {
       "post": {
-        "description": "",
+        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1849,7 +1956,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Sessions",
+        "summary": "Create Multi Agent Multi Agent Sessions",
         "operationId": "post_multi_agent_sessions",
         "tags": [
           "Multi-Agent"
@@ -1858,28 +1965,31 @@
     },
     "/multi-agent/sessions/stream": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "prompt",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Prompt parameter."
           }
         ],
         "responses": {
@@ -1896,7 +2006,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Stream",
+        "summary": "Get Multi Agent Multi Agent Sessions Stream",
         "operationId": "get_multi_agent_sessions_stream",
         "tags": [
           "Multi-Agent"
@@ -1905,21 +2015,23 @@
     },
     "/multi-agent/tool-agents/run": {
       "post": {
-        "description": "",
+        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1945,7 +2057,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Run",
+        "summary": "Create Multi Agent Multi Agent Tool Agents Run",
         "operationId": "post_multi_agent_tool_agents_run",
         "tags": [
           "Multi-Agent"
@@ -1954,21 +2066,23 @@
     },
     "/multi-agent/memory": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -1985,7 +2099,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Memory",
+        "summary": "Get Multi Agent Multi Agent Memory",
         "operationId": "get_multi_agent_memory",
         "tags": [
           "Multi-Agent"
@@ -1994,21 +2108,23 @@
     },
     "/multi-agent/events": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2025,7 +2141,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Events",
+        "summary": "Get Multi Agent Multi Agent Events",
         "operationId": "get_multi_agent_events",
         "tags": [
           "Multi-Agent"
@@ -2034,21 +2150,23 @@
     },
     "/multi-agent/tool-agents": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2065,7 +2183,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Tool Agents",
+        "summary": "Get Multi Agent Multi Agent Tool Agents",
         "operationId": "get_multi_agent_tool_agents",
         "tags": [
           "Multi-Agent"
@@ -2074,7 +2192,7 @@
     },
     "/multi-agent/tool-agents/{agentId}/logs": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "agentId",
@@ -2082,28 +2200,32 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the agent."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "limit",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Maximum number of items to return (used for pagination)."
           }
         ],
         "responses": {
@@ -2123,7 +2245,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Logs",
+        "summary": "Get Multi Agent Multi Agent Tool Agents Agentid Logs",
         "operationId": "get_multi_agent_tool_agents_agentid_logs",
         "tags": [
           "Multi-Agent"
@@ -2132,7 +2254,7 @@
     },
     "/chat/history/{conversationId}": {
       "get": {
-        "description": "",
+        "description": "Get chat and conversation operations.\n\nUse these endpoints to send messages, stream model output when supported, and fetch conversation history for debugging or UI rendering.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "conversationId",
@@ -2140,21 +2262,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the conversation."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2171,7 +2296,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get History",
+        "summary": "Get Chat Chat History Conversationid",
         "operationId": "get_chat_history_conversationid",
         "tags": [
           "Chat"
@@ -2180,49 +2305,55 @@
     },
     "/chat/send": {
       "post": {
-        "description": "",
+        "description": "Create chat and conversation operations.\n\nUse these endpoints to send messages, stream model output when supported, and fetch conversation history for debugging or UI rendering.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "x-user-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "User identifier for scoping the request to a specific user."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -2250,13 +2381,16 @@
                 "type": "object",
                 "properties": {
                   "message": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Message value."
                   },
                   "conversationId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier of the conversation."
                   },
                   "history": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "History value."
                   }
                 }
               }
@@ -2269,7 +2403,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Send",
+        "summary": "Create Chat Chat Send",
         "operationId": "post_chat_send",
         "tags": [
           "Chat"
@@ -2278,21 +2412,23 @@
     },
     "/automations": {
       "get": {
-        "description": "",
+        "description": "Get automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2309,28 +2445,30 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Automations",
+        "summary": "Get Automations Automations",
         "operationId": "get_automations",
         "tags": [
           "Automations"
         ]
       },
       "post": {
-        "description": "",
+        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2350,7 +2488,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Automations",
+        "summary": "Create Automations Automations",
         "operationId": "post_automations",
         "tags": [
           "Automations"
@@ -2359,7 +2497,7 @@
     },
     "/automations/{automationId}": {
       "put": {
-        "description": "",
+        "description": "Update automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "automationId",
@@ -2367,21 +2505,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Automationid parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2401,7 +2542,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Automations",
+        "summary": "Update Automations Automations Automationid",
         "operationId": "put_automations_automationid",
         "tags": [
           "Automations"
@@ -2410,21 +2551,23 @@
     },
     "/automation-builder/interpret": {
       "post": {
-        "description": "",
+        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2441,7 +2584,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Interpret",
+        "summary": "Create Automation Builder Automation Builder Interpret",
         "operationId": "post_automation_builder_interpret",
         "tags": [
           "Automation Builder"
@@ -2450,21 +2593,23 @@
     },
     "/automation-builder/message": {
       "post": {
-        "description": "",
+        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2481,7 +2626,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Message",
+        "summary": "Create Automation Builder Automation Builder Message",
         "operationId": "post_automation_builder_message",
         "tags": [
           "Automation Builder"
@@ -2490,21 +2635,23 @@
     },
     "/automation-builder/key": {
       "post": {
-        "description": "",
+        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2521,7 +2668,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Key",
+        "summary": "Create Automation Builder Automation Builder Key",
         "operationId": "post_automation_builder_key",
         "tags": [
           "Automation Builder"
@@ -2530,28 +2677,31 @@
     },
     "/automation-builder/events": {
       "get": {
-        "description": "",
+        "description": "Get automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "sessionId",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the session."
           }
         ],
         "responses": {
@@ -2571,7 +2721,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Events",
+        "summary": "Get Automation Builder Automation Builder Events",
         "operationId": "get_automation_builder_events",
         "tags": [
           "Automation Builder"
@@ -2580,7 +2730,7 @@
     },
     "/automation-builder/session/{sessionId}": {
       "delete": {
-        "description": "",
+        "description": "Delete automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "sessionId",
@@ -2588,21 +2738,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the session."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2625,7 +2778,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Delete Session",
+        "summary": "Delete Automation Builder Automation Builder Session Sessionid",
         "operationId": "delete_automation_builder_session_sessionid",
         "tags": [
           "Automation Builder"
@@ -2634,21 +2787,23 @@
     },
     "/connectors/install": {
       "post": {
-        "description": "",
+        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2666,10 +2821,12 @@
                 "type": "object",
                 "properties": {
                   "connectorId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Connecto."
                   },
                   "tenantId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Tenan."
                   }
                 }
               }
@@ -2682,7 +2839,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Install",
+        "summary": "Create Connectors Connectors Install",
         "operationId": "post_connectors_install",
         "tags": [
           "Connectors"
@@ -2691,21 +2848,23 @@
     },
     "/connectors/draft": {
       "post": {
-        "description": "",
+        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2723,7 +2882,8 @@
                 "type": "object",
                 "properties": {
                   "tenantId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Tenan."
                   }
                 }
               }
@@ -2736,7 +2896,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Draft",
+        "summary": "Create Connectors Connectors Draft",
         "operationId": "post_connectors_draft",
         "tags": [
           "Connectors"
@@ -2745,21 +2905,23 @@
     },
     "/connectors/publish": {
       "post": {
-        "description": "",
+        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2777,7 +2939,8 @@
                 "type": "object",
                 "properties": {
                   "tenantId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Tenan."
                   }
                 }
               }
@@ -2790,7 +2953,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Publish",
+        "summary": "Create Connectors Connectors Publish",
         "operationId": "post_connectors_publish",
         "tags": [
           "Connectors"
@@ -2799,21 +2962,23 @@
     },
     "/connectors/installed": {
       "get": {
-        "description": "",
+        "description": "Get connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2830,7 +2995,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Installed",
+        "summary": "Get Connectors Connectors Installed",
         "operationId": "get_connectors_installed",
         "tags": [
           "Connectors"
@@ -2839,21 +3004,23 @@
     },
     "/connectors/drafts": {
       "get": {
-        "description": "",
+        "description": "Get connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2870,7 +3037,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Drafts",
+        "summary": "Get Connectors Connectors Drafts",
         "operationId": "get_connectors_drafts",
         "tags": [
           "Connectors"
@@ -2879,21 +3046,23 @@
     },
     "/connectors/run": {
       "post": {
-        "description": "",
+        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2914,22 +3083,28 @@
                 "type": "object",
                 "properties": {
                   "transformName": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Transformname value."
                   },
                   "connectorId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Connecto."
                   },
                   "action": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Action value."
                   },
                   "input": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Input value."
                   },
                   "authKey": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Authkey value."
                   },
                   "tenantId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Tenan."
                   }
                 }
               }
@@ -2942,7 +3117,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Run",
+        "summary": "Create Connectors Connectors Run",
         "operationId": "post_connectors_run",
         "tags": [
           "Connectors"
@@ -2951,21 +3126,23 @@
     },
     "/connectors/test": {
       "post": {
-        "description": "",
+        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -2986,13 +3163,16 @@
                 "type": "object",
                 "properties": {
                   "connectorId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Connecto."
                   },
                   "authKey": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Authkey value."
                   },
                   "tenantId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Tenan."
                   }
                 }
               }
@@ -3005,7 +3185,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Test",
+        "summary": "Create Connectors Connectors Test",
         "operationId": "post_connectors_test",
         "tags": [
           "Connectors"
@@ -3014,21 +3194,23 @@
     },
     "/connectors/secrets": {
       "post": {
-        "description": "",
+        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3049,16 +3231,20 @@
                 "type": "object",
                 "properties": {
                   "connectorId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Connecto."
                   },
                   "key": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Key value."
                   },
                   "value": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Value value."
                   },
                   "tenantId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Tenan."
                   }
                 }
               }
@@ -3071,7 +3257,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Secrets",
+        "summary": "Create Connectors Connectors Secrets",
         "operationId": "post_connectors_secrets",
         "tags": [
           "Connectors"
@@ -3080,21 +3266,23 @@
     },
     "/ai/generate-connector": {
       "post": {
-        "description": "",
+        "description": "Create Ai Ai Generate Connector.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3115,7 +3303,8 @@
                 "type": "object",
                 "properties": {
                   "tenantId": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Unique identifier for Tenan."
                   }
                 }
               }
@@ -3128,7 +3317,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Generate Connector",
+        "summary": "Create Ai Ai Generate Connector",
         "operationId": "post_ai_generate_connector",
         "tags": [
           "AI"
@@ -3137,21 +3326,23 @@
     },
     "/usage/summary": {
       "get": {
-        "description": "",
+        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3168,7 +3359,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Summary",
+        "summary": "Get Usage Usage Summary",
         "operationId": "get_usage_summary",
         "tags": [
           "Usage"
@@ -3177,21 +3368,23 @@
     },
     "/usage/daily": {
       "get": {
-        "description": "",
+        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3208,7 +3401,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Daily",
+        "summary": "Get Usage Usage Daily",
         "operationId": "get_usage_daily",
         "tags": [
           "Usage"
@@ -3217,21 +3410,23 @@
     },
     "/usage/monthly": {
       "get": {
-        "description": "",
+        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3248,7 +3443,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Monthly",
+        "summary": "Get Usage Usage Monthly",
         "operationId": "get_usage_monthly",
         "tags": [
           "Usage"
@@ -3257,21 +3452,23 @@
     },
     "/usage/breakdown": {
       "get": {
-        "description": "",
+        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3288,7 +3485,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Breakdown",
+        "summary": "Get Usage Usage Breakdown",
         "operationId": "get_usage_breakdown",
         "tags": [
           "Usage"
@@ -3297,21 +3494,23 @@
     },
     "/usage/models": {
       "get": {
-        "description": "",
+        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3328,7 +3527,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Models",
+        "summary": "Get Usage Usage Models",
         "operationId": "get_usage_models",
         "tags": [
           "Usage"
@@ -3337,21 +3536,23 @@
     },
     "/usage/agents": {
       "get": {
-        "description": "",
+        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3368,7 +3569,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Agents",
+        "summary": "Get Usage Usage Agents",
         "operationId": "get_usage_agents",
         "tags": [
           "Usage"
@@ -3377,21 +3578,23 @@
     },
     "/ingestion/jobs": {
       "post": {
-        "description": "",
+        "description": "Create Ingestion Ingestion Jobs.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3412,10 +3615,12 @@
                 "type": "object",
                 "properties": {
                   "org_id": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Organization identifier used to scope the request."
                   },
                   "source": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Source value."
                   }
                 }
               }
@@ -3427,28 +3632,30 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "Create Jobs",
+        "summary": "Create Ingestion Ingestion Jobs",
         "operationId": "post_ingestion_jobs",
         "tags": [
           "Ingestion"
         ]
       },
       "get": {
-        "description": "",
+        "description": "Get Ingestion Ingestion Jobs.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3467,7 +3674,7 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "List Jobs",
+        "summary": "Get Ingestion Ingestion Jobs",
         "operationId": "get_ingestion_jobs",
         "tags": [
           "Ingestion"
@@ -3476,7 +3683,7 @@
     },
     "/ingestion/jobs/{id}": {
       "delete": {
-        "description": "",
+        "description": "Delete Ingestion Ingestion Jobs Id.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "id",
@@ -3484,21 +3691,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3520,7 +3730,7 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "Delete Jobs",
+        "summary": "Delete Ingestion Ingestion Jobs Id",
         "operationId": "delete_ingestion_jobs_id",
         "tags": [
           "Ingestion"
@@ -3529,28 +3739,31 @@
     },
     "/ingestion/search": {
       "get": {
-        "description": "",
+        "description": "Get Ingestion Ingestion Search.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "q",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Optional search query to filter results."
           }
         ],
         "responses": {
@@ -3569,7 +3782,7 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "List Search",
+        "summary": "Get Ingestion Ingestion Search",
         "operationId": "get_ingestion_search",
         "tags": [
           "Ingestion"
@@ -3578,21 +3791,23 @@
     },
     "/workflows/compile": {
       "post": {
-        "description": "",
+        "description": "Create Workflows Workflows Compile.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3609,7 +3824,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Compile",
+        "summary": "Create Workflows Workflows Compile",
         "operationId": "post_workflows_compile",
         "tags": [
           "Workflows"
@@ -3618,21 +3833,23 @@
     },
     "/workflows": {
       "get": {
-        "description": "",
+        "description": "Get Workflows Workflows.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3649,28 +3866,30 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Workflows",
+        "summary": "Get Workflows Workflows",
         "operationId": "get_workflows",
         "tags": [
           "Workflows"
         ]
       },
       "post": {
-        "description": "",
+        "description": "Create Workflows Workflows.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3690,7 +3909,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Workflows",
+        "summary": "Create Workflows Workflows",
         "operationId": "post_workflows",
         "tags": [
           "Workflows"
@@ -3699,7 +3918,7 @@
     },
     "/workflows/{workflowId}": {
       "get": {
-        "description": "",
+        "description": "Get Workflows Workflows Workflowid.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "workflowId",
@@ -3707,21 +3926,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Workflowid parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3741,7 +3963,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Workflows",
+        "summary": "Get Workflows Workflows Workflowid",
         "operationId": "get_workflows_workflowid",
         "tags": [
           "Workflows"
@@ -3750,7 +3972,7 @@
     },
     "/workflows/{workflowId}/run": {
       "post": {
-        "description": "",
+        "description": "Create Workflows Workflows Workflowid Run.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "workflowId",
@@ -3758,21 +3980,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Workflowid parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3789,7 +4014,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Run",
+        "summary": "Create Workflows Workflows Workflowid Run",
         "operationId": "post_workflows_workflowid_run",
         "tags": [
           "Workflows"
@@ -3798,21 +4023,23 @@
     },
     "/branding": {
       "get": {
-        "description": "",
+        "description": "Get Branding Branding.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3829,28 +4056,30 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "List Branding",
+        "summary": "Get Branding Branding",
         "operationId": "get_branding",
         "tags": [
           "Branding"
         ]
       },
       "put": {
-        "description": "",
+        "description": "Update Branding Branding.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -3871,25 +4100,32 @@
                 "type": "object",
                 "properties": {
                   "companyName": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Companyname value."
                   },
                   "shortName": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Shortname value."
                   },
                   "logoData": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Logodata value."
                   },
                   "sidebarLogoData": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Sidebarlogodata value."
                   },
                   "faviconData": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Favicondata value."
                   },
                   "loginLogoData": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Loginlogodata value."
                   },
                   "showSidebarText": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Showsidebartext value."
                   }
                 }
               }
@@ -3902,7 +4138,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Branding",
+        "summary": "Update Branding Branding",
         "operationId": "put_branding",
         "tags": [
           "Branding"
@@ -3911,42 +4147,47 @@
     },
     "/oauth/jira/install": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -3961,7 +4202,7 @@
           }
         },
         "security": [],
-        "summary": "List Install",
+        "summary": "Get Jira Oauth Oauth Jira Install",
         "operationId": "get_oauth_jira_install",
         "tags": [
           "Jira OAuth"
@@ -3970,56 +4211,63 @@
     },
     "/oauth/jira/callback": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "code",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Code parameter."
           },
           {
             "name": "state",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "State parameter."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4037,7 +4285,7 @@
           }
         },
         "security": [],
-        "summary": "List Callback",
+        "summary": "Get Jira Oauth Oauth Jira Callback",
         "operationId": "get_oauth_jira_callback",
         "tags": [
           "Jira OAuth"
@@ -4046,42 +4294,47 @@
     },
     "/oauth/jira/refresh": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4102,7 +4355,7 @@
           }
         },
         "security": [],
-        "summary": "Create Refresh",
+        "summary": "Create Jira Oauth Oauth Jira Refresh",
         "operationId": "post_oauth_jira_refresh",
         "tags": [
           "Jira OAuth"
@@ -4111,42 +4364,47 @@
     },
     "/oauth/jira/disconnect": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4164,7 +4422,7 @@
           }
         },
         "security": [],
-        "summary": "Create Disconnect",
+        "summary": "Create Jira Oauth Oauth Jira Disconnect",
         "operationId": "post_oauth_jira_disconnect",
         "tags": [
           "Jira OAuth"
@@ -4173,42 +4431,47 @@
     },
     "/oauth/jira/status": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4220,7 +4483,7 @@
           }
         },
         "security": [],
-        "summary": "List Status",
+        "summary": "Get Jira Oauth Oauth Jira Status",
         "operationId": "get_oauth_jira_status",
         "tags": [
           "Jira OAuth"
@@ -4229,42 +4492,47 @@
     },
     "/oauth/jira/projects": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4285,7 +4553,7 @@
           }
         },
         "security": [],
-        "summary": "List Projects",
+        "summary": "Get Jira Oauth Oauth Jira Projects",
         "operationId": "get_oauth_jira_projects",
         "tags": [
           "Jira OAuth"
@@ -4294,7 +4562,7 @@
     },
     "/oauth/jira/projects/{id}": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "id",
@@ -4302,42 +4570,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Unique identifier of the resource."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4358,7 +4632,7 @@
           }
         },
         "security": [],
-        "summary": "Get Projects",
+        "summary": "Get Jira Oauth Oauth Jira Projects Id",
         "operationId": "get_oauth_jira_projects_id",
         "tags": [
           "Jira OAuth"
@@ -4367,42 +4641,47 @@
     },
     "/oauth/jira/issues/assigned": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4423,7 +4702,7 @@
           }
         },
         "security": [],
-        "summary": "List Assigned",
+        "summary": "Get Jira Oauth Oauth Jira Issues Assigned",
         "operationId": "get_oauth_jira_issues_assigned",
         "tags": [
           "Jira OAuth"
@@ -4432,42 +4711,47 @@
     },
     "/oauth/jira/issues/search": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4485,7 +4769,7 @@
           }
         },
         "security": [],
-        "summary": "Create Search",
+        "summary": "Create Jira Oauth Oauth Jira Issues Search",
         "operationId": "post_oauth_jira_issues_search",
         "tags": [
           "Jira OAuth"
@@ -4494,28 +4778,31 @@
     },
     "/oauth/jira/issues/similar": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -4539,16 +4826,20 @@
                 "type": "object",
                 "properties": {
                   "projectKey": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Projectkey value."
                   },
                   "summary": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Summary value."
                   },
                   "description": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Description value."
                   },
                   "limit": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Maximum number of items to return (used for pagination)."
                   }
                 }
               }
@@ -4556,7 +4847,7 @@
           }
         },
         "security": [],
-        "summary": "Create Similar",
+        "summary": "Create Jira Oauth Oauth Jira Issues Similar",
         "operationId": "post_oauth_jira_issues_similar",
         "tags": [
           "Jira OAuth"
@@ -4565,7 +4856,7 @@
     },
     "/oauth/jira/issues/{key}": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "key",
@@ -4573,42 +4864,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Key parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4626,14 +4923,14 @@
           }
         },
         "security": [],
-        "summary": "Get Issues",
+        "summary": "Get Jira Oauth Oauth Jira Issues Key",
         "operationId": "get_oauth_jira_issues_key",
         "tags": [
           "Jira OAuth"
         ]
       },
       "patch": {
-        "description": "",
+        "description": "Update the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "key",
@@ -4641,42 +4938,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Key parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4694,7 +4997,7 @@
           }
         },
         "security": [],
-        "summary": "Update Issues",
+        "summary": "Update Jira Oauth Oauth Jira Issues Key",
         "operationId": "patch_oauth_jira_issues_key",
         "tags": [
           "Jira OAuth"
@@ -4703,42 +5006,47 @@
     },
     "/oauth/jira/issues/ingest": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4762,7 +5070,8 @@
                 "type": "object",
                 "properties": {
                   "fields": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Fields value."
                   }
                 }
               }
@@ -4770,7 +5079,7 @@
           }
         },
         "security": [],
-        "summary": "Create Ingest",
+        "summary": "Create Jira Oauth Oauth Jira Issues Ingest",
         "operationId": "post_oauth_jira_issues_ingest",
         "tags": [
           "Jira OAuth"
@@ -4779,42 +5088,47 @@
     },
     "/oauth/jira/issues": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4832,7 +5146,7 @@
           }
         },
         "security": [],
-        "summary": "Create Issues",
+        "summary": "Create Jira Oauth Oauth Jira Issues",
         "operationId": "post_oauth_jira_issues",
         "tags": [
           "Jira OAuth"
@@ -4841,7 +5155,7 @@
     },
     "/oauth/jira/issues/{key}/comment": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "key",
@@ -4849,42 +5163,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Key parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4902,7 +5222,7 @@
           }
         },
         "security": [],
-        "summary": "Create Comment",
+        "summary": "Create Jira Oauth Oauth Jira Issues Key Comment",
         "operationId": "post_oauth_jira_issues_key_comment",
         "tags": [
           "Jira OAuth"
@@ -4911,7 +5231,7 @@
     },
     "/oauth/jira/issues/{key}/attachments": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "key",
@@ -4919,42 +5239,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Key parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -4978,7 +5304,8 @@
                 "type": "object",
                 "properties": {
                   "files": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Files value."
                   }
                 }
               }
@@ -4986,7 +5313,7 @@
           }
         },
         "security": [],
-        "summary": "Create Attachments",
+        "summary": "Create Jira Oauth Oauth Jira Issues Key Attachments",
         "operationId": "post_oauth_jira_issues_key_attachments",
         "tags": [
           "Jira OAuth"
@@ -4995,7 +5322,7 @@
     },
     "/oauth/jira/issues/{key}/transition": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "key",
@@ -5003,42 +5330,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Key parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -5056,7 +5389,7 @@
           }
         },
         "security": [],
-        "summary": "Create Transition",
+        "summary": "Create Jira Oauth Oauth Jira Issues Key Transition",
         "operationId": "post_oauth_jira_issues_key_transition",
         "tags": [
           "Jira OAuth"
@@ -5065,7 +5398,7 @@
     },
     "/oauth/jira/issues/{key}/transitions": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "key",
@@ -5073,42 +5406,48 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Key parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -5126,7 +5465,7 @@
           }
         },
         "security": [],
-        "summary": "Get Transitions",
+        "summary": "Get Jira Oauth Oauth Jira Issues Key Transitions",
         "operationId": "get_oauth_jira_issues_key_transitions",
         "tags": [
           "Jira OAuth"
@@ -5135,42 +5474,47 @@
     },
     "/oauth/jira/webhook": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -5188,7 +5532,7 @@
           }
         },
         "security": [],
-        "summary": "Create Webhook",
+        "summary": "Create Jira Oauth Oauth Jira Webhook",
         "operationId": "post_oauth_jira_webhook",
         "tags": [
           "Jira OAuth"
@@ -5197,21 +5541,23 @@
     },
     "/oauth/github/user": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5223,7 +5569,7 @@
           }
         },
         "security": [],
-        "summary": "List User",
+        "summary": "Get Github Oauth Oauth Github User",
         "operationId": "get_oauth_github_user",
         "tags": [
           "GitHub OAuth"
@@ -5232,21 +5578,23 @@
     },
     "/oauth/github/user/repos": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5258,7 +5606,7 @@
           }
         },
         "security": [],
-        "summary": "List Repos",
+        "summary": "Get Github Oauth Oauth Github User Repos",
         "operationId": "get_oauth_github_user_repos",
         "tags": [
           "GitHub OAuth"
@@ -5267,21 +5615,23 @@
     },
     "/oauth/github/graphql": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5293,7 +5643,7 @@
           }
         },
         "security": [],
-        "summary": "Create Graphql",
+        "summary": "Create Github Oauth Oauth Github Graphql",
         "operationId": "post_oauth_github_graphql",
         "tags": [
           "GitHub OAuth"
@@ -5302,7 +5652,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/readme": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "owner",
@@ -5310,7 +5660,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Owner parameter."
           },
           {
             "name": "repo",
@@ -5318,21 +5669,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Repo parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5344,7 +5698,7 @@
           }
         },
         "security": [],
-        "summary": "Get Readme",
+        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Readme",
         "operationId": "get_oauth_github_repos_owner_repo_readme",
         "tags": [
           "GitHub OAuth"
@@ -5353,7 +5707,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/contents": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "owner",
@@ -5361,7 +5715,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Owner parameter."
           },
           {
             "name": "repo",
@@ -5369,21 +5724,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Repo parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5395,7 +5753,7 @@
           }
         },
         "security": [],
-        "summary": "Get Contents",
+        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Contents",
         "operationId": "get_oauth_github_repos_owner_repo_contents",
         "tags": [
           "GitHub OAuth"
@@ -5404,7 +5762,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/git/trees/{ref}": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "owner",
@@ -5412,7 +5770,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Owner parameter."
           },
           {
             "name": "repo",
@@ -5420,7 +5779,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Repo parameter."
           },
           {
             "name": "ref",
@@ -5428,21 +5788,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Ref parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5454,7 +5817,7 @@
           }
         },
         "security": [],
-        "summary": "Get Trees",
+        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Git Trees Ref",
         "operationId": "get_oauth_github_repos_owner_repo_git_trees_ref",
         "tags": [
           "GitHub OAuth"
@@ -5463,7 +5826,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/contents/{path}": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "owner",
@@ -5471,7 +5834,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Owner parameter."
           },
           {
             "name": "repo",
@@ -5479,7 +5843,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Repo parameter."
           },
           {
             "name": "path",
@@ -5487,21 +5852,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Path parameter."
           },
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5513,7 +5881,7 @@
           }
         },
         "security": [],
-        "summary": "Get Contents",
+        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Contents Path",
         "operationId": "get_oauth_github_repos_owner_repo_contents_path",
         "tags": [
           "GitHub OAuth"
@@ -5522,21 +5890,23 @@
     },
     "/oauth/github": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5548,7 +5918,7 @@
           }
         },
         "security": [],
-        "summary": "List Github",
+        "summary": "Get Github Oauth Oauth Github",
         "operationId": "get_oauth_github",
         "tags": [
           "GitHub OAuth"
@@ -5557,21 +5927,23 @@
     },
     "/oauth/github/install": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5583,7 +5955,7 @@
           }
         },
         "security": [],
-        "summary": "List Install",
+        "summary": "Get Github Oauth Oauth Github Install",
         "operationId": "get_oauth_github_install",
         "tags": [
           "GitHub OAuth"
@@ -5592,56 +5964,63 @@
     },
     "/oauth/github/callback": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "state",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "State parameter."
           },
           {
             "name": "code",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Code parameter."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -5653,7 +6032,7 @@
           }
         },
         "security": [],
-        "summary": "List Callback",
+        "summary": "Get Github Oauth Oauth Github Callback",
         "operationId": "get_oauth_github_callback",
         "tags": [
           "GitHub OAuth"
@@ -5662,49 +6041,55 @@
     },
     "/oauth/github/contributions": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "year",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Year parameter."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -5725,7 +6110,7 @@
           }
         },
         "security": [],
-        "summary": "List Contributions",
+        "summary": "Get Github Oauth Oauth Github Contributions",
         "operationId": "get_oauth_github_contributions",
         "tags": [
           "GitHub OAuth"
@@ -5734,28 +6119,31 @@
     },
     "/oauth/github/status": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5767,7 +6155,7 @@
           }
         },
         "security": [],
-        "summary": "List Status",
+        "summary": "Get Github Oauth Oauth Github Status",
         "operationId": "get_oauth_github_status",
         "tags": [
           "GitHub OAuth"
@@ -5776,28 +6164,31 @@
     },
     "/oauth/github/repos": {
       "get": {
-        "description": "",
+        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5812,7 +6203,7 @@
           }
         },
         "security": [],
-        "summary": "List Repos",
+        "summary": "Get Github Oauth Oauth Github Repos",
         "operationId": "get_oauth_github_repos",
         "tags": [
           "GitHub OAuth"
@@ -5821,42 +6212,47 @@
     },
     "/oauth/github/repos/sync": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -5877,7 +6273,7 @@
           }
         },
         "security": [],
-        "summary": "Create Sync",
+        "summary": "Create Github Oauth Oauth Github Repos Sync",
         "operationId": "post_oauth_github_repos_sync",
         "tags": [
           "GitHub OAuth"
@@ -5886,42 +6282,47 @@
     },
     "/oauth/github/repos/selection": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-account-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           },
           {
             "name": "account_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Account identifier used to scope the request to a specific account."
           }
         ],
         "responses": {
@@ -5945,7 +6346,8 @@
                 "type": "object",
                 "properties": {
                   "repoIds": {
-                    "example": "any"
+                    "example": "any",
+                    "description": "Repoids value."
                   }
                 }
               }
@@ -5953,7 +6355,7 @@
           }
         },
         "security": [],
-        "summary": "Create Selection",
+        "summary": "Create Github Oauth Oauth Github Repos Selection",
         "operationId": "post_oauth_github_repos_selection",
         "tags": [
           "GitHub OAuth"
@@ -5962,28 +6364,31 @@
     },
     "/oauth/github/disconnect": {
       "post": {
-        "description": "",
+        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
         "parameters": [
           {
             "name": "license_key",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "License key used to authorize requests for your organization."
           },
           {
             "name": "org_id",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           },
           {
             "name": "x-org-id",
             "in": "header",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Organization identifier used to scope the request."
           }
         ],
         "responses": {
@@ -5998,7 +6403,7 @@
           }
         },
         "security": [],
-        "summary": "Create Disconnect",
+        "summary": "Create Github Oauth Oauth Github Disconnect",
         "operationId": "post_oauth_github_disconnect",
         "tags": [
           "GitHub OAuth"
