@@ -34,6 +34,7 @@
         "groups": [
           {
             "group": "hidden",
+            "hidden": true,
             "pages": [
               "quickstart",
               "development"
