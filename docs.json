@@ -17,6 +17,7 @@
         {
           "anchor": "Documentation",
           "icon": "book-open-cover",
+          "hidden": true,
           "href": "https://mintlify.com/docs"
         },
         {
