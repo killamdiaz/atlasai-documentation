@@ -23,6 +23,7 @@
         {
           "anchor": "Blog",
           "icon": "newspaper",
+          "hidden": true,
           "href": "https://mintlify.com/blog"
         }
       ]
@@ -32,11 +33,16 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "hidden",
             "pages": [
-              "index",
               "quickstart",
               "development"
+            ]
+          },
+          {
+            "group": "Getting started",
+            "pages": [
+              "index"
             ]
           },
           {
@@ -66,6 +72,7 @@
           },
           {
             "group": "AI tools",
+            "hidden": true,
             "pages": [
               "ai-tools/cursor",
               "ai-tools/claude-code",
