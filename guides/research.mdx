@@ -3,7 +3,7 @@ title: "AtlasMemory v2 Research"
 description: "A brief technical walkthrough of AtlasMemory v2 — from extraction to memory-aware reasoning."
 ---
 
-# AtlasMemory v2 — How we built it
+## AtlasMemory v2 — How we built it
 
 Large language models are powerful, but **they don’t naturally maintain durable, structured memory** across long, multi-session conversations. AtlasMemory v2 is our approach to solving that: extracting high-signal memories, organizing them into a semantic + temporal graph, and using that structure to power **reliable retrieval** and **memory-aware reasoning**.
 
@@ -46,7 +46,7 @@ Each extracted memory is normalized into a consistent schema:
 - **Identity markers** — unique labels (user IDs, org IDs, handles) that disambiguate entities
 - **Conflicts / updates** — corrections and changes that supersede older information
 
-![Image](/images/image-7.png)
+![Image](/images/image-12.png)
 
 ---
 
@@ -65,7 +65,7 @@ We use a small set of expressive relations:
 - **mentions** — lightweight entity-reference link (useful for fast hops across the graph)
 - **temporal_before / temporal_after** — encodes ordering constraints so retrieval respects time
 
-![Image](/images/image-8.png)
+![Image](/images/image-13.png)
 
 ---
 
@@ -90,7 +90,7 @@ We model time as a graph (not a single linear timeline), so we can:
 - estimate intervals for fuzzy time ranges (e.g., “a few weeks ago”)
 - apply recency weighting safely without deleting older-but-important facts
 
-![Image](/images/image-9.png)
+![Image](/images/image-14.png)
 
 ---
 
@@ -110,7 +110,7 @@ The output is a ranked bundle of:
 - supporting conversation chunks
 - graph neighbors (optional)
 
-![Image](/images/image-10.png)
+![Image](/images/image-15.png)
 
 ---
 
@@ -127,7 +127,7 @@ AtlasMemory handles this with an automated repair loop:
 - decay stale memories gradually (soft aging rather than deletion)
 - propagate updates to connected nodes so the graph stays consistent
 
-![Image](/images/image-5.png)
+![Image](/images/image-17.png)
 
 ---
 
@@ -146,4 +146,4 @@ This is the reasoning loop that makes AtlasMemory feel consistent over time. Eve
 
 This creates a **self-evolving memory system** that improves with use.
 
-![Image](/images/image-11.png)
+![Image](/images/image-16.png)

@@ -31,13 +31,14 @@
     "tabs": [
       {
         "tab": "Guides",
-        "groups": [
+        "pages": [
           {
             "group": "hidden",
             "hidden": true,
             "pages": [
               "quickstart",
-              "development"
+              "development",
+              "guides/research"
             ]
           },
           {
@@ -78,12 +79,6 @@
               "ai-tools/cursor",
               "ai-tools/claude-code",
               "ai-tools/windsurf"
-            ]
-          },
-          {
-            "group": "Research",
-            "pages": [
-              "guides/research/atlas-research"
             ]
           }
         ]
