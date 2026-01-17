@@ -1,0 +1,154 @@
+---
+title: "AtlasMemory v2 Research"
+description: "A brief technical walkthrough of AtlasMemory v2 — from extraction to memory-aware reasoning."
+---
+
+# AtlasMemory v2 — How we built it
+
+Large language models are powerful, but **they don’t naturally maintain durable, structured memory** across long, multi-session conversations.
+AtlasMemory v2 is our approach to solving that: extracting high-signal memories, organizing them into a semantic + temporal graph, and using that structure to power **reliable retrieval** and **memory-aware reasoning**.
+
+This page is a lightweight overview of the system architecture (we’ll publish evaluation + benchmark results later).
+
+---
+
+## Architecture overview
+
+AtlasMemory v2 is built as **6 core layers**, each responsible for one part of the memory lifecycle:
+
+1. **Atomic Memory Extraction** — turn raw text into structured facts
+2. **Global Memory Graph** — connect facts into a living semantic graph
+3. **Temporal Engine** — ground facts on a timeline to preserve ordering
+4. **Hybrid Search v2** — retrieve with vectors + graph + time-aware scoring
+5. **Memory Repair Engine** — resolve contradictions and propagate updates
+6. **Memory-Aware Reasoning Engine** — build a context packet and answer with confidence
+
+---
+
+## Layer 1 — Atomic Memory Extraction
+
+AtlasMemory begins by converting unstructured text into **atomic, reusable memories**.
+
+### Dual-pass extraction
+
+We extract in two stages:
+
+- **Pass 1: Atomic facts** (explicit, directly stated)
+- **Pass 2: Implicit facts** (preferences, traits, identity markers, soft contradictions)
+
+### What we store
+
+Each extracted memory is normalized into a consistent schema:
+
+- **Profile memories** — stable user attributes like roles, background, or recurring identifiers
+- **Preference memories** — likes/dislikes and choices that personalize future behavior
+- **Temporal facts** — events with time signals (absolute, relative, or inferred)
+- **Relationship facts** — connections between people, teams, objects, or entities
+- **Identity markers** — unique labels (user IDs, org IDs, handles) that disambiguate entities
+- **Conflicts / updates** — corrections and changes that supersede older information
+
+![Layer 1 — Atomic Memory Extraction](/images/research/layer-1-atomic-extraction.png)
+
+---
+
+## Layer 2 — Global Memory Graph
+
+Once memories exist, we connect them into a **global semantic graph**.
+Each memory becomes a node. Relationships become edges.
+
+### Edge types
+
+We use a small set of expressive relations:
+
+- **updates** — marks a contradiction or overwrite when newer information replaces older truth
+- **extends** — adds additional detail that complements an existing memory without conflict
+- **refines** — clarifies or tightens a memory (more specific wording, better precision)
+- **relates_to** — links two memories that are meaningfully connected, but not a strict update
+- **mentions** — lightweight entity-reference link (useful for fast hops across the graph)
+- **temporal_before / temporal_after** — encodes ordering constraints so retrieval respects time
+
+![Layer 2 — Global Memory Graph](/images/research/layer-2-memory-graph.png)
+
+---
+
+## Layer 3 — Temporal Engine
+
+Memory without time becomes unreliable. AtlasMemory adds a dedicated **temporal grounding layer**.
+
+### Three clocks
+
+We track time with three complementary concepts:
+
+- **Document Time** — when the text was created (the timestamp of the conversation or message)
+- **Event Time** — when the real-world event actually happened (e.g., “yesterday”, “in 2023”)
+- **Inference Time** — time derived from language cues (e.g., “last month”, “next Friday”, “soon”)
+
+### Global timeline DAG
+
+We model time as a graph (not a single linear timeline), so we can:
+
+- resolve ambiguous ordering when multiple events are mentioned out of sequence
+- detect contradictions across time (what changed, and when it changed)
+- estimate intervals for fuzzy time ranges (e.g., “a few weeks ago”)
+- apply recency weighting safely without deleting older-but-important facts
+
+![Layer 3 — Temporal Engine](/images/research/layer-3-temporal-engine.png)
+
+---
+
+## Layer 4 — Hybrid Search v2
+
+Retrieval is not just vector similarity.
+AtlasMemory retrieves using a **hybrid strategy** that combines:
+
+- **Vector Search** — finds semantically similar memories even when phrasing differs
+- **Graph Traversal** — expands to related nodes to bring in the right supporting context
+- **Temporal Weighting** — prefers the most relevant time-consistent facts for the query
+- **Recency Decay** — gradually down-weights stale memories instead of hard-dropping them
+- **Entity Importance Scoring** — boosts key entities (people, projects, IDs) that drive accuracy
+
+The output is a ranked bundle of:
+
+- top memories
+- supporting conversation chunks
+- graph neighbors (optional)
+
+![Layer 4 — Hybrid Search v2](/images/research/layer-4-hybrid-search.png)
+
+---
+
+## Layer 5 — Memory Repair Engine
+
+Real conversations evolve.
+Preferences change. Facts get corrected. New information supersedes old information.
+
+AtlasMemory handles this with an automated repair loop:
+
+- detect contradictions between new inputs and existing memories
+- supersede outdated facts while preserving the historical trail
+- link conflict edges so changes are explainable and traceable
+- rewrite summaries so the “latest truth” is easy to use downstream
+- decay stale memories gradually (soft aging rather than deletion)
+- propagate updates to connected nodes so the graph stays consistent
+
+![Layer 5 — Memory Repair Engine](/images/research/layer-5-memory-repair.png)
+
+---
+
+## Layer 6 — Memory-Aware Reasoning Engine
+
+This is the reasoning loop that makes AtlasMemory feel consistent over time.
+Every answer is produced from a **structured context packet** (not a raw dump).
+
+### Query-to-answer pipeline
+
+1. Receive query
+2. Retrieve top memories + supporting chunks
+3. Construct a structured **context packet** (facts + evidence + time)
+4. Send to the model with reasoning instructions
+5. Produce an answer with a confidence level
+6. Feed new information back into the memory graph for future reuse
+
+This creates a **self-evolving memory system** that improves with use.
+
+![Layer 6 — Memory-Aware Reasoning Engine](/images/research/layer-6-memory-aware-reasoning.png)

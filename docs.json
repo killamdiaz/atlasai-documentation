@@ -79,6 +79,12 @@
               "ai-tools/claude-code",
               "ai-tools/windsurf"
             ]
+          },
+          {
+            "group": "Research",
+            "pages": [
+              "guides/research/atlas-research"
+            ]
           }
         ]
       },
