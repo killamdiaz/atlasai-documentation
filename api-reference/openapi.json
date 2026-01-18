@@ -3,22 +3,36 @@
   "info": {
     "title": "Atlas Engine API",
     "version": "0.1.0",
-    "description": "Generated from Express routes. Schemas may be refined over time.",
+    "description": "Atlas Engine is the execution layer behind AtlasAI. Use this API to authenticate, configure org-level settings, manage agents and tasks, connect data sources, and inspect system health. This OpenAPI file powers the interactive API reference; schemas may evolve as capabilities expand.",
     "license": {
       "name": "Proprietary",
       "url": "https://atlasengine.ai/legal"
     }
   },
-  "servers": [
+    "servers": [
+    {
+      "url": "https://{atlasHost}",
+      "description": "Atlas API base URL (cloud or self-hosted)",
+      "variables": {
+        "atlasHost": {
+          "default": "YOUR_ATLAS_HOST",
+          "description": "Hostname of your Atlas deployment (e.g. api.atlasengine.ai, localhost:8080)"
+        }
+      }
+    },
     {
       "url": "https://api.atlasengine.ai",
-      "description": "Production server"
+      "description": "Atlas Cloud (default)"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Local development"
     }
   ],
   "paths": {
     "/healthz": {
       "get": {
-        "description": "Returns a lightweight health signal for Atlas Engine.\n\nUse this endpoint for load balancers, uptime checks, and container orchestration probes. It is intentionally fast and does not validate external dependencies.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** health in Atlas Engine.\n\nDesigned for load balancers and uptime probes; it is intentionally lightweight.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "responses": {
           "200": {
             "description": "OK"
@@ -28,7 +42,7 @@
           }
         },
         "security": [],
-        "summary": "Get System Healthz",
+        "summary": "Get system health",
         "operationId": "get_healthz",
         "tags": [
           "System"
@@ -37,7 +51,7 @@
     },
     "/metrics": {
       "get": {
-        "description": "Returns operational metrics for Atlas Engine (Prometheus-compatible output).\n\nUse this to monitor request rates, latencies, and error patterns. Protect access in production since metrics can expose internal service behavior.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** metrics in Atlas Engine.\n\nProtect this endpoint in production; metrics may expose internal behavior.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "responses": {
           "200": {
             "description": "OK"
@@ -55,7 +69,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get System Metrics",
+        "summary": "Get system metrics",
         "operationId": "get_metrics",
         "tags": [
           "System"
@@ -64,7 +78,7 @@
     },
     "/api/license/status": {
       "get": {
-        "description": "Get license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** license status in Atlas Engine.\n\nUse these endpoints to validate keys, check status, refresh entitlements, and apply updated license payloads.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "x-org-id",
@@ -111,7 +125,7 @@
           }
         },
         "security": [],
-        "summary": "Get License License Status",
+        "summary": "Get license status",
         "operationId": "get_api_license_status",
         "tags": [
           "License"
@@ -120,7 +134,7 @@
     },
     "/api/license/validate": {
       "post": {
-        "description": "Create license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** license validate in Atlas Engine.\n\nUse these endpoints to validate keys, check status, refresh entitlements, and apply updated license payloads.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "x-license-key",
@@ -156,7 +170,7 @@
           }
         },
         "security": [],
-        "summary": "Create License License Validate",
+        "summary": "Validate license key",
         "operationId": "post_api_license_validate",
         "tags": [
           "License"
@@ -165,7 +179,7 @@
     },
     "/api/license/refresh": {
       "post": {
-        "description": "Create license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** license refresh in Atlas Engine.\n\nUse these endpoints to validate keys, check status, refresh entitlements, and apply updated license payloads.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "x-license-key",
@@ -201,7 +215,7 @@
           }
         },
         "security": [],
-        "summary": "Create License License Refresh",
+        "summary": "Refresh license entitlements",
         "operationId": "post_api_license_refresh",
         "tags": [
           "License"
@@ -210,7 +224,7 @@
     },
     "/api/license/apply": {
       "post": {
-        "description": "Create license-related state for your organization.\n\nUse these endpoints to validate access, check license status, refresh entitlements, or apply a license payload depending on your deployment flow.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** license apply in Atlas Engine.\n\nUse these endpoints to validate keys, check status, refresh entitlements, and apply updated license payloads.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "x-org-id",
@@ -241,7 +255,7 @@
           }
         },
         "security": [],
-        "summary": "Create License License Apply",
+        "summary": "Apply license payload",
         "operationId": "post_api_license_apply",
         "tags": [
           "License"
@@ -250,7 +264,7 @@
     },
     "/api/deployment/version": {
       "get": {
-        "description": "Get deployment metadata.\n\nUse these endpoints to verify which version/build of Atlas Engine is running, useful for debugging and support.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** deployment version in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "responses": {
           "200": {
             "description": "OK"
@@ -265,7 +279,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Deployment Deployment Version",
+        "summary": "Get Deployment Version",
         "operationId": "get_api_deployment_version",
         "tags": [
           "Deployment"
@@ -274,7 +288,7 @@
     },
     "/.well-known/saml/metadata/{orgId}": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** .well known saml metadata by id in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "orgId",
@@ -298,7 +312,7 @@
           }
         },
         "security": [],
-        "summary": "Get Auth (saml) .well Known Saml Metadata Orgid",
+        "summary": "Get SAML metadata",
         "operationId": "get__well_known_saml_metadata_orgid",
         "tags": [
           "Auth (SAML)"
@@ -307,7 +321,7 @@
     },
     "/auth/saml/config/{orgId}": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** auth saml config by id in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "orgId",
@@ -328,14 +342,14 @@
           }
         },
         "security": [],
-        "summary": "Get Auth (saml) Auth Saml Config Orgid",
+        "summary": "Get SAML configuration",
         "operationId": "get_auth_saml_config_orgid",
         "tags": [
           "Auth (SAML)"
         ]
       },
       "put": {
-        "description": "Update the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **update** auth saml config by id in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "orgId",
@@ -363,11 +377,11 @@
                 "properties": {
                   "domains": {
                     "example": "any",
-                    "description": "Domains value."
+                    "description": "List of email domains that should use this SSO configuration."
                   },
                   "idp_metadata_url": {
                     "example": "any",
-                    "description": "Idp Metadata Url value."
+                    "description": "URL to your IdP metadata XML (used to configure SSO)."
                   }
                 }
               }
@@ -375,7 +389,7 @@
           }
         },
         "security": [],
-        "summary": "Update Auth (saml) Auth Saml Config Orgid",
+        "summary": "Update SAML configuration",
         "operationId": "put_auth_saml_config_orgid",
         "tags": [
           "Auth (SAML)"
@@ -384,7 +398,7 @@
     },
     "/auth/saml/discover": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** auth saml discover in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "email",
@@ -404,7 +418,7 @@
           }
         },
         "security": [],
-        "summary": "Get Auth (saml) Auth Saml Discover",
+        "summary": "Discover organization for SSO",
         "operationId": "get_auth_saml_discover",
         "tags": [
           "Auth (SAML)"
@@ -413,7 +427,7 @@
     },
     "/auth/saml/login": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** auth saml login in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "accept",
@@ -421,7 +435,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Accept parameter."
+            "description": "Content type(s) your client can accept (typically `application/json`)."
           },
           {
             "name": "host",
@@ -429,7 +443,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Host parameter."
+            "description": "Host header used to build absolute redirect URLs during auth flows."
           },
           {
             "name": "org_id",
@@ -480,15 +494,15 @@
                   },
                   "email": {
                     "example": "any",
-                    "description": "Email value."
+                    "description": "End-user email address."
                   },
                   "redirect": {
                     "example": "any",
-                    "description": "Redirect value."
+                    "description": "Redirect URL to return the user to after the flow completes."
                   },
                   "relayState": {
                     "example": "any",
-                    "description": "Relaystate value."
+                    "description": "RelayState value preserved across the SAML round-trip."
                   }
                 }
               }
@@ -496,7 +510,7 @@
           }
         },
         "security": [],
-        "summary": "Create Auth (saml) Auth Saml Login",
+        "summary": "Initiate SAML login",
         "operationId": "post_auth_saml_login",
         "tags": [
           "Auth (SAML)"
@@ -505,7 +519,7 @@
     },
     "/auth/saml/acs": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** auth saml acs in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "accept",
@@ -513,7 +527,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Accept parameter."
+            "description": "Content type(s) your client can accept (typically `application/json`)."
           }
         ],
         "responses": {
@@ -532,11 +546,11 @@
                 "properties": {
                   "SAMLResponse": {
                     "example": "any",
-                    "description": "Samlresponse value."
+                    "description": "SAMLResponse payload posted by the IdP for verification."
                   },
                   "RelayState": {
                     "example": "any",
-                    "description": "Relaystate value."
+                    "description": "RelayState value preserved across the SAML round-trip."
                   },
                   "org_id": {
                     "example": "any",
@@ -548,7 +562,7 @@
           }
         },
         "security": [],
-        "summary": "Create Auth (saml) Auth Saml Acs",
+        "summary": "Handle SAML ACS callback",
         "operationId": "post_auth_saml_acs",
         "tags": [
           "Auth (SAML)"
@@ -557,7 +571,7 @@
     },
     "/auth/saml/idp-init": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** auth saml idp init in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "accept",
@@ -565,7 +579,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Accept parameter."
+            "description": "Content type(s) your client can accept (typically `application/json`)."
           }
         ],
         "responses": {
@@ -584,11 +598,11 @@
                 "properties": {
                   "SAMLResponse": {
                     "example": "any",
-                    "description": "Samlresponse value."
+                    "description": "SAMLResponse payload posted by the IdP for verification."
                   },
                   "RelayState": {
                     "example": "any",
-                    "description": "Relaystate value."
+                    "description": "RelayState value preserved across the SAML round-trip."
                   }
                 }
               }
@@ -596,7 +610,7 @@
           }
         },
         "security": [],
-        "summary": "Create Auth (saml) Auth Saml Idp Init",
+        "summary": "Handle IdP-initiated SAML login",
         "operationId": "post_auth_saml_idp_init",
         "tags": [
           "Auth (SAML)"
@@ -605,7 +619,7 @@
     },
     "/auth/saml/logout": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** auth saml logout in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "responses": {
           "200": {
             "description": "OK"
@@ -618,7 +632,7 @@
           }
         },
         "security": [],
-        "summary": "Create Auth (saml) Auth Saml Logout",
+        "summary": "Start SAML logout",
         "operationId": "post_auth_saml_logout",
         "tags": [
           "Auth (SAML)"
@@ -627,7 +641,7 @@
     },
     "/auth/saml/slo": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** auth saml slo in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "responses": {
           "200": {
             "description": "OK"
@@ -637,7 +651,7 @@
           }
         },
         "security": [],
-        "summary": "Create Auth (saml) Auth Saml Slo",
+        "summary": "Handle SAML single logout",
         "operationId": "post_auth_saml_slo",
         "tags": [
           "Auth (SAML)"
@@ -646,7 +660,7 @@
     },
     "/auth/saml/session": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** auth saml session in Atlas Engine.\n\nUse these endpoints to configure SSO, redirect users to your IdP, and validate callbacks.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "authorization",
@@ -674,7 +688,7 @@
           }
         },
         "security": [],
-        "summary": "Get Auth (saml) Auth Saml Session",
+        "summary": "Get current SAML session",
         "operationId": "get_auth_saml_session",
         "tags": [
           "Auth (SAML)"
@@ -683,7 +697,7 @@
     },
     "/agents": {
       "post": {
-        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** agents in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -719,14 +733,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Agents Agents",
+        "summary": "Create Agents",
         "operationId": "post_agents",
         "tags": [
           "Agents"
         ]
       },
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** agents in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -759,7 +773,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Agents Agents",
+        "summary": "Get Agents",
         "operationId": "get_agents",
         "tags": [
           "Agents"
@@ -768,7 +782,7 @@
     },
     "/agents/{id}": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** agents by id in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -813,14 +827,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Agents Agents Id",
+        "summary": "Get Agents By Id",
         "operationId": "get_agents_id",
         "tags": [
           "Agents"
         ]
       },
       "patch": {
-        "description": "Update agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **update** agents by id in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -865,14 +879,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Agents Agents Id",
+        "summary": "Update Agents By Id",
         "operationId": "patch_agents_id",
         "tags": [
           "Agents"
         ]
       },
       "delete": {
-        "description": "Delete agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **delete** agents by id in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -920,7 +934,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Delete Agents Agents Id",
+        "summary": "Delete Agents By Id",
         "operationId": "delete_agents_id",
         "tags": [
           "Agents"
@@ -929,7 +943,7 @@
     },
     "/agents/{id}/task": {
       "post": {
-        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** agents by id task in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -977,7 +991,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Agents Agents Id Task",
+        "summary": "Create Agents By Id Task",
         "operationId": "post_agents_id_task",
         "tags": [
           "Agents"
@@ -986,7 +1000,7 @@
     },
     "/agents/{id}/memory": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** agents by id memory in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -1039,7 +1053,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Agents Agents Id Memory",
+        "summary": "Get Agents By Id Memory",
         "operationId": "get_agents_id_memory",
         "tags": [
           "Agents"
@@ -1048,7 +1062,7 @@
     },
     "/agents/{id}/status": {
       "patch": {
-        "description": "Update agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **update** agents by id status in Atlas Engine.\n\nAgents are runnable configurations. Use these endpoints to create/manage agents and trigger executions.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -1093,7 +1107,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Agents Agents Id Status",
+        "summary": "Update Agents By Id Status",
         "operationId": "patch_agents_id_status",
         "tags": [
           "Agents"
@@ -1102,7 +1116,7 @@
     },
     "/tasks": {
       "get": {
-        "description": "Get task execution and streaming results.\n\nUse these endpoints to list tasks, assign tasks, and subscribe to task output streams for real-time progress updates.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** tasks in Atlas Engine.\n\nTasks represent work execution. Use streaming endpoints to read progress in real time.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1143,7 +1157,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Tasks Tasks",
+        "summary": "Get Tasks",
         "operationId": "get_tasks",
         "tags": [
           "Tasks"
@@ -1152,7 +1166,7 @@
     },
     "/tasks/{taskId}/stream": {
       "get": {
-        "description": "Get task execution and streaming results.\n\nUse these endpoints to list tasks, assign tasks, and subscribe to task output streams for real-time progress updates.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** tasks by id stream in Atlas Engine.\n\nTasks represent work execution. Use streaming endpoints to read progress in real time.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "taskId",
@@ -1201,7 +1215,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Tasks Tasks Taskid Stream",
+        "summary": "Stream task output",
         "operationId": "get_tasks_taskid_stream",
         "tags": [
           "Tasks"
@@ -1210,7 +1224,7 @@
     },
     "/tasks/assign": {
       "post": {
-        "description": "Create task execution and streaming results.\n\nUse these endpoints to list tasks, assign tasks, and subscribe to task output streams for real-time progress updates.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** tasks assign in Atlas Engine.\n\nTasks represent work execution. Use streaming endpoints to read progress in real time.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1246,7 +1260,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Tasks Tasks Assign",
+        "summary": "Create Tasks Assign",
         "operationId": "post_tasks_assign",
         "tags": [
           "Tasks"
@@ -1255,7 +1269,7 @@
     },
     "/commands": {
       "post": {
-        "description": "Create Commands Commands.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** commands in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1321,7 +1335,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Commands Commands",
+        "summary": "Create Commands",
         "operationId": "post_commands",
         "tags": [
           "Commands"
@@ -1330,7 +1344,7 @@
     },
     "/agent-builder": {
       "post": {
-        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** agent builder in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1366,7 +1380,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Agent Builder Agent Builder",
+        "summary": "Create Agent Builder",
         "operationId": "post_agent_builder",
         "tags": [
           "Agent Builder"
@@ -1375,7 +1389,7 @@
     },
     "/agent-builder/spec": {
       "post": {
-        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** agent builder spec in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1408,7 +1422,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Agent Builder Agent Builder Spec",
+        "summary": "Create Agent Builder Spec",
         "operationId": "post_agent_builder_spec",
         "tags": [
           "Agent Builder"
@@ -1417,7 +1431,7 @@
     },
     "/agent-config/schema": {
       "post": {
-        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** agent config schema in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1450,7 +1464,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Agent Config Agent Config Schema",
+        "summary": "Create Agent Config Schema",
         "operationId": "post_agent_config_schema",
         "tags": [
           "Agent Config"
@@ -1459,7 +1473,7 @@
     },
     "/agent-config/{agentId}": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** agent config by id in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "agentId",
@@ -1504,14 +1518,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Agent Config Agent Config Agentid",
+        "summary": "Get Agent Config By Id",
         "operationId": "get_agent_config_agentid",
         "tags": [
           "Agent Config"
         ]
       },
       "put": {
-        "description": "Update agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **update** agent config by id in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "agentId",
@@ -1556,7 +1570,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Agent Config Agent Config Agentid",
+        "summary": "Update Agent Config By Id",
         "operationId": "put_agent_config_agentid",
         "tags": [
           "Agent Config"
@@ -1565,7 +1579,7 @@
     },
     "/insights/overview": {
       "get": {
-        "description": "Get Insights Insights Overview.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** insights overview in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1598,7 +1612,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Insights Insights Overview",
+        "summary": "Get Insights Overview",
         "operationId": "get_insights_overview",
         "tags": [
           "Insights"
@@ -1607,7 +1621,7 @@
     },
     "/memory/graph": {
       "get": {
-        "description": "Get memory and retrieval features.\n\nUse these endpoints to inspect memory graphs, subscribe to memory update streams, or query memory-related state for debugging and observability.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** memory graph in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1664,7 +1678,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Memory Memory Graph",
+        "summary": "Get Memory Graph",
         "operationId": "get_memory_graph",
         "tags": [
           "Memory"
@@ -1673,7 +1687,7 @@
     },
     "/memory/stream": {
       "get": {
-        "description": "Get memory and retrieval features.\n\nUse these endpoints to inspect memory graphs, subscribe to memory update streams, or query memory-related state for debugging and observability.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** memory stream in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1713,7 +1727,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Memory Memory Stream",
+        "summary": "Stream memory updates",
         "operationId": "get_memory_stream",
         "tags": [
           "Memory"
@@ -1722,7 +1736,7 @@
     },
     "/meta-controller/approvals": {
       "get": {
-        "description": "Get Meta Controller Meta Controller Approvals.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** meta controller approvals in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1763,7 +1777,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Meta Controller Meta Controller Approvals",
+        "summary": "Get Meta Controller Approvals",
         "operationId": "get_meta_controller_approvals",
         "tags": [
           "Meta Controller"
@@ -1772,7 +1786,7 @@
     },
     "/meta-controller/approvals/{id}/resolve": {
       "post": {
-        "description": "Create Meta Controller Meta Controller Approvals Id Resolve.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** meta controller approvals by id resolve in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -1814,7 +1828,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Meta Controller Meta Controller Approvals Id Resolve",
+        "summary": "Create Meta Controller Approvals By Id Resolve",
         "operationId": "post_meta_controller_approvals_id_resolve",
         "tags": [
           "Meta Controller"
@@ -1823,7 +1837,7 @@
     },
     "/meta-controller/events": {
       "get": {
-        "description": "Get Meta Controller Meta Controller Events.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** meta controller events in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1864,7 +1878,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Meta Controller Meta Controller Events",
+        "summary": "Get Meta Controller Events",
         "operationId": "get_meta_controller_events",
         "tags": [
           "Meta Controller"
@@ -1873,7 +1887,7 @@
     },
     "/meta-controller/conversation-graph": {
       "get": {
-        "description": "Get Meta Controller Meta Controller Conversation Graph.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** meta controller conversation graph in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1914,7 +1928,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Meta Controller Meta Controller Conversation Graph",
+        "summary": "Get Meta Controller Conversation Graph",
         "operationId": "get_meta_controller_conversation_graph",
         "tags": [
           "Meta Controller"
@@ -1923,7 +1937,7 @@
     },
     "/multi-agent/sessions": {
       "post": {
-        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** multi agent sessions in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1956,7 +1970,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Multi Agent Multi Agent Sessions",
+        "summary": "Create Multi Agent Sessions",
         "operationId": "post_multi_agent_sessions",
         "tags": [
           "Multi-Agent"
@@ -1965,7 +1979,7 @@
     },
     "/multi-agent/sessions/stream": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** multi agent sessions stream in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -1989,7 +2003,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Prompt parameter."
+            "description": "Parameter provided in the query of the request."
           }
         ],
         "responses": {
@@ -2006,7 +2020,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Multi Agent Multi Agent Sessions Stream",
+        "summary": "Stream Multi Agent Sessions",
         "operationId": "get_multi_agent_sessions_stream",
         "tags": [
           "Multi-Agent"
@@ -2015,7 +2029,7 @@
     },
     "/multi-agent/tool-agents/run": {
       "post": {
-        "description": "Create agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** multi agent tool agents run in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2057,7 +2071,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Multi Agent Multi Agent Tool Agents Run",
+        "summary": "Create Multi Agent Tool Agents Run",
         "operationId": "post_multi_agent_tool_agents_run",
         "tags": [
           "Multi-Agent"
@@ -2066,7 +2080,7 @@
     },
     "/multi-agent/memory": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** multi agent memory in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2099,7 +2113,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Multi Agent Multi Agent Memory",
+        "summary": "Get Multi Agent Memory",
         "operationId": "get_multi_agent_memory",
         "tags": [
           "Multi-Agent"
@@ -2108,7 +2122,7 @@
     },
     "/multi-agent/events": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** multi agent events in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2141,7 +2155,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Multi Agent Multi Agent Events",
+        "summary": "Get Multi Agent Events",
         "operationId": "get_multi_agent_events",
         "tags": [
           "Multi-Agent"
@@ -2150,7 +2164,7 @@
     },
     "/multi-agent/tool-agents": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** multi agent tool agents in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2183,7 +2197,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Multi Agent Multi Agent Tool Agents",
+        "summary": "Get Multi Agent Tool Agents",
         "operationId": "get_multi_agent_tool_agents",
         "tags": [
           "Multi-Agent"
@@ -2192,7 +2206,7 @@
     },
     "/multi-agent/tool-agents/{agentId}/logs": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** multi agent tool agents by id logs in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "agentId",
@@ -2245,7 +2259,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Multi Agent Multi Agent Tool Agents Agentid Logs",
+        "summary": "Get Multi Agent Tool Agents By Id Logs",
         "operationId": "get_multi_agent_tool_agents_agentid_logs",
         "tags": [
           "Multi-Agent"
@@ -2254,7 +2268,7 @@
     },
     "/chat/history/{conversationId}": {
       "get": {
-        "description": "Get chat and conversation operations.\n\nUse these endpoints to send messages, stream model output when supported, and fetch conversation history for debugging or UI rendering.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** chat history by id in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "conversationId",
@@ -2296,7 +2310,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Chat Chat History Conversationid",
+        "summary": "Get Chat History By Id",
         "operationId": "get_chat_history_conversationid",
         "tags": [
           "Chat"
@@ -2305,7 +2319,7 @@
     },
     "/chat/send": {
       "post": {
-        "description": "Create chat and conversation operations.\n\nUse these endpoints to send messages, stream model output when supported, and fetch conversation history for debugging or UI rendering.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** chat send in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2382,7 +2396,7 @@
                 "properties": {
                   "message": {
                     "example": "any",
-                    "description": "Message value."
+                    "description": "Value for `message`."
                   },
                   "conversationId": {
                     "example": "any",
@@ -2390,7 +2404,7 @@
                   },
                   "history": {
                     "example": "any",
-                    "description": "History value."
+                    "description": "Value for `history`."
                   }
                 }
               }
@@ -2403,7 +2417,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Chat Chat Send",
+        "summary": "Create Chat Send",
         "operationId": "post_chat_send",
         "tags": [
           "Chat"
@@ -2412,7 +2426,7 @@
     },
     "/automations": {
       "get": {
-        "description": "Get automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** automations in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2445,14 +2459,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Automations Automations",
+        "summary": "Get Automations",
         "operationId": "get_automations",
         "tags": [
           "Automations"
         ]
       },
       "post": {
-        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** automations in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2488,7 +2502,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Automations Automations",
+        "summary": "Create Automations",
         "operationId": "post_automations",
         "tags": [
           "Automations"
@@ -2497,7 +2511,7 @@
     },
     "/automations/{automationId}": {
       "put": {
-        "description": "Update automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **update** automations by id in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "automationId",
@@ -2506,7 +2520,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Automationid parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -2542,7 +2556,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Automations Automations Automationid",
+        "summary": "Update Automations By Id",
         "operationId": "put_automations_automationid",
         "tags": [
           "Automations"
@@ -2551,7 +2565,7 @@
     },
     "/automation-builder/interpret": {
       "post": {
-        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** automation builder interpret in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2584,7 +2598,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Automation Builder Automation Builder Interpret",
+        "summary": "Create Automation Builder Interpret",
         "operationId": "post_automation_builder_interpret",
         "tags": [
           "Automation Builder"
@@ -2593,7 +2607,7 @@
     },
     "/automation-builder/message": {
       "post": {
-        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** automation builder message in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2626,7 +2640,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Automation Builder Automation Builder Message",
+        "summary": "Create Automation Builder Message",
         "operationId": "post_automation_builder_message",
         "tags": [
           "Automation Builder"
@@ -2635,7 +2649,7 @@
     },
     "/automation-builder/key": {
       "post": {
-        "description": "Create automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** automation builder key in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2668,7 +2682,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Automation Builder Automation Builder Key",
+        "summary": "Create Automation Builder Key",
         "operationId": "post_automation_builder_key",
         "tags": [
           "Automation Builder"
@@ -2677,7 +2691,7 @@
     },
     "/automation-builder/events": {
       "get": {
-        "description": "Get automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** automation builder events in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2721,7 +2735,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Automation Builder Automation Builder Events",
+        "summary": "Get Automation Builder Events",
         "operationId": "get_automation_builder_events",
         "tags": [
           "Automation Builder"
@@ -2730,7 +2744,7 @@
     },
     "/automation-builder/session/{sessionId}": {
       "delete": {
-        "description": "Delete automation and automation-builder workflow endpoints.\n\nUse these endpoints to create/update automations and to interpret/compose automation steps via the automation builder APIs.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **delete** automation builder session by id in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "sessionId",
@@ -2778,7 +2792,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Delete Automation Builder Automation Builder Session Sessionid",
+        "summary": "Delete Automation Builder Session By Id",
         "operationId": "delete_automation_builder_session_sessionid",
         "tags": [
           "Automation Builder"
@@ -2787,7 +2801,7 @@
     },
     "/connectors/install": {
       "post": {
-        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** connectors install in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2839,7 +2853,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Connectors Connectors Install",
+        "summary": "Create Connectors Install",
         "operationId": "post_connectors_install",
         "tags": [
           "Connectors"
@@ -2848,7 +2862,7 @@
     },
     "/connectors/draft": {
       "post": {
-        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** connectors draft in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2896,7 +2910,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Connectors Connectors Draft",
+        "summary": "Create Connectors Draft",
         "operationId": "post_connectors_draft",
         "tags": [
           "Connectors"
@@ -2905,7 +2919,7 @@
     },
     "/connectors/publish": {
       "post": {
-        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** connectors publish in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2953,7 +2967,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Connectors Connectors Publish",
+        "summary": "Create Connectors Publish",
         "operationId": "post_connectors_publish",
         "tags": [
           "Connectors"
@@ -2962,7 +2976,7 @@
     },
     "/connectors/installed": {
       "get": {
-        "description": "Get connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** connectors installed in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -2995,7 +3009,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Connectors Connectors Installed",
+        "summary": "Get Connectors Installed",
         "operationId": "get_connectors_installed",
         "tags": [
           "Connectors"
@@ -3004,7 +3018,7 @@
     },
     "/connectors/drafts": {
       "get": {
-        "description": "Get connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** connectors drafts in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3037,7 +3051,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Connectors Connectors Drafts",
+        "summary": "Get Connectors Drafts",
         "operationId": "get_connectors_drafts",
         "tags": [
           "Connectors"
@@ -3046,7 +3060,7 @@
     },
     "/connectors/run": {
       "post": {
-        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** connectors run in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3084,7 +3098,7 @@
                 "properties": {
                   "transformName": {
                     "example": "any",
-                    "description": "Transformname value."
+                    "description": "Value for `transformName`."
                   },
                   "connectorId": {
                     "example": "any",
@@ -3092,15 +3106,15 @@
                   },
                   "action": {
                     "example": "any",
-                    "description": "Action value."
+                    "description": "Value for `action`."
                   },
                   "input": {
                     "example": "any",
-                    "description": "Input value."
+                    "description": "Value for `input`."
                   },
                   "authKey": {
                     "example": "any",
-                    "description": "Authkey value."
+                    "description": "Value for `authKey`."
                   },
                   "tenantId": {
                     "example": "any",
@@ -3117,7 +3131,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Connectors Connectors Run",
+        "summary": "Create Connectors Run",
         "operationId": "post_connectors_run",
         "tags": [
           "Connectors"
@@ -3126,7 +3140,7 @@
     },
     "/connectors/test": {
       "post": {
-        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** connectors test in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3168,7 +3182,7 @@
                   },
                   "authKey": {
                     "example": "any",
-                    "description": "Authkey value."
+                    "description": "Value for `authKey`."
                   },
                   "tenantId": {
                     "example": "any",
@@ -3185,7 +3199,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Connectors Connectors Test",
+        "summary": "Create Connectors Test",
         "operationId": "post_connectors_test",
         "tags": [
           "Connectors"
@@ -3194,7 +3208,7 @@
     },
     "/connectors/secrets": {
       "post": {
-        "description": "Create connectors and connector runs.\n\nConnectors let Atlas Engine talk to external systems (Drive, Notion, Gmail, GitHub, etc.). Use these endpoints to create drafts, publish connectors, run/test them, and manage secrets.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** connectors secrets in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3236,11 +3250,11 @@
                   },
                   "key": {
                     "example": "any",
-                    "description": "Key value."
+                    "description": "Value for `key`."
                   },
                   "value": {
                     "example": "any",
-                    "description": "Value value."
+                    "description": "Value for `value`."
                   },
                   "tenantId": {
                     "example": "any",
@@ -3257,7 +3271,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Connectors Connectors Secrets",
+        "summary": "Create Connectors Secrets",
         "operationId": "post_connectors_secrets",
         "tags": [
           "Connectors"
@@ -3266,7 +3280,7 @@
     },
     "/ai/generate-connector": {
       "post": {
-        "description": "Create Ai Ai Generate Connector.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** ai generate connector in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3317,7 +3331,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Ai Ai Generate Connector",
+        "summary": "Create Ai Generate Connector",
         "operationId": "post_ai_generate_connector",
         "tags": [
           "AI"
@@ -3326,7 +3340,7 @@
     },
     "/usage/summary": {
       "get": {
-        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** usage summary in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3359,7 +3373,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Usage Usage Summary",
+        "summary": "Get Usage Summary",
         "operationId": "get_usage_summary",
         "tags": [
           "Usage"
@@ -3368,7 +3382,7 @@
     },
     "/usage/daily": {
       "get": {
-        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** usage daily in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3401,7 +3415,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Usage Usage Daily",
+        "summary": "Get Usage Daily",
         "operationId": "get_usage_daily",
         "tags": [
           "Usage"
@@ -3410,7 +3424,7 @@
     },
     "/usage/monthly": {
       "get": {
-        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** usage monthly in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3443,7 +3457,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Usage Usage Monthly",
+        "summary": "Get Usage Monthly",
         "operationId": "get_usage_monthly",
         "tags": [
           "Usage"
@@ -3452,7 +3466,7 @@
     },
     "/usage/breakdown": {
       "get": {
-        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** usage breakdown in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3485,7 +3499,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Usage Usage Breakdown",
+        "summary": "Get Usage Breakdown",
         "operationId": "get_usage_breakdown",
         "tags": [
           "Usage"
@@ -3494,7 +3508,7 @@
     },
     "/usage/models": {
       "get": {
-        "description": "Get usage metrics and billing-related analytics.\n\nUse these endpoints to retrieve summarized usage, daily/monthly rollups, per-model breakdowns, and agent-specific metrics.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** usage models in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3527,7 +3541,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Usage Usage Models",
+        "summary": "Get Usage Models",
         "operationId": "get_usage_models",
         "tags": [
           "Usage"
@@ -3536,7 +3550,7 @@
     },
     "/usage/agents": {
       "get": {
-        "description": "Get agents used to execute workflows in Atlas Engine.\n\nAgents represent runnable configurations (tools, policies, and runtime settings). Use these endpoints to create and manage agents, trigger agent tasks, fetch agent memory, and update agent lifecycle state.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** usage agents in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3569,7 +3583,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Usage Usage Agents",
+        "summary": "Get Usage Agents",
         "operationId": "get_usage_agents",
         "tags": [
           "Usage"
@@ -3578,7 +3592,7 @@
     },
     "/ingestion/jobs": {
       "post": {
-        "description": "Create Ingestion Ingestion Jobs.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** ingestion jobs in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3620,7 +3634,7 @@
                   },
                   "source": {
                     "example": "any",
-                    "description": "Source value."
+                    "description": "Value for `source`."
                   }
                 }
               }
@@ -3632,14 +3646,14 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "Create Ingestion Ingestion Jobs",
+        "summary": "Create Ingestion Jobs",
         "operationId": "post_ingestion_jobs",
         "tags": [
           "Ingestion"
         ]
       },
       "get": {
-        "description": "Get Ingestion Ingestion Jobs.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** ingestion jobs in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3674,7 +3688,7 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "Get Ingestion Ingestion Jobs",
+        "summary": "Get Ingestion Jobs",
         "operationId": "get_ingestion_jobs",
         "tags": [
           "Ingestion"
@@ -3683,7 +3697,7 @@
     },
     "/ingestion/jobs/{id}": {
       "delete": {
-        "description": "Delete Ingestion Ingestion Jobs Id.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **delete** ingestion jobs by id in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -3730,7 +3744,7 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "Delete Ingestion Ingestion Jobs Id",
+        "summary": "Delete Ingestion Jobs By Id",
         "operationId": "delete_ingestion_jobs_id",
         "tags": [
           "Ingestion"
@@ -3739,7 +3753,7 @@
     },
     "/ingestion/search": {
       "get": {
-        "description": "Get Ingestion Ingestion Search.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** ingestion search in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3782,7 +3796,7 @@
             "AtlasSecretHeader": []
           }
         ],
-        "summary": "Get Ingestion Ingestion Search",
+        "summary": "Get Ingestion Search",
         "operationId": "get_ingestion_search",
         "tags": [
           "Ingestion"
@@ -3791,7 +3805,7 @@
     },
     "/workflows/compile": {
       "post": {
-        "description": "Create Workflows Workflows Compile.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** workflows compile in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3824,7 +3838,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Workflows Workflows Compile",
+        "summary": "Create Workflows Compile",
         "operationId": "post_workflows_compile",
         "tags": [
           "Workflows"
@@ -3833,7 +3847,7 @@
     },
     "/workflows": {
       "get": {
-        "description": "Get Workflows Workflows.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** workflows in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3866,14 +3880,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Workflows Workflows",
+        "summary": "Get Workflows",
         "operationId": "get_workflows",
         "tags": [
           "Workflows"
         ]
       },
       "post": {
-        "description": "Create Workflows Workflows.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** workflows in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -3909,7 +3923,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Workflows Workflows",
+        "summary": "Create Workflows",
         "operationId": "post_workflows",
         "tags": [
           "Workflows"
@@ -3918,7 +3932,7 @@
     },
     "/workflows/{workflowId}": {
       "get": {
-        "description": "Get Workflows Workflows Workflowid.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** workflows by id in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "workflowId",
@@ -3927,7 +3941,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Workflowid parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -3963,7 +3977,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Workflows Workflows Workflowid",
+        "summary": "Get Workflows By Id",
         "operationId": "get_workflows_workflowid",
         "tags": [
           "Workflows"
@@ -3972,7 +3986,7 @@
     },
     "/workflows/{workflowId}/run": {
       "post": {
-        "description": "Create Workflows Workflows Workflowid Run.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **create** workflows by id run in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "workflowId",
@@ -3981,7 +3995,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Workflowid parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -4014,7 +4028,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Create Workflows Workflows Workflowid Run",
+        "summary": "Create Workflows By Id Run",
         "operationId": "post_workflows_workflowid_run",
         "tags": [
           "Workflows"
@@ -4023,7 +4037,7 @@
     },
     "/branding": {
       "get": {
-        "description": "Get Branding Branding.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **get** branding in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4056,14 +4070,14 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Get Branding Branding",
+        "summary": "Get Branding",
         "operationId": "get_branding",
         "tags": [
           "Branding"
         ]
       },
       "put": {
-        "description": "Update Branding Branding.\n\nThis endpoint is part of the Atlas Engine API surface. Use the parameters and request body below to shape the operation, then inspect responses and error codes to handle edge cases.\n\nThis endpoint requires authentication (commonly `x-org-id` and `x-license-key`, or an auth token depending on the route).",
+        "description": "Use this endpoint to **update** branding in Atlas Engine.\n\nAuthentication: **required** (org/license headers or bearer token depending on your deployment).\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4101,31 +4115,31 @@
                 "properties": {
                   "companyName": {
                     "example": "any",
-                    "description": "Companyname value."
+                    "description": "Value for `companyName`."
                   },
                   "shortName": {
                     "example": "any",
-                    "description": "Shortname value."
+                    "description": "Value for `shortName`."
                   },
                   "logoData": {
                     "example": "any",
-                    "description": "Logodata value."
+                    "description": "Value for `logoData`."
                   },
                   "sidebarLogoData": {
                     "example": "any",
-                    "description": "Sidebarlogodata value."
+                    "description": "Value for `sidebarLogoData`."
                   },
                   "faviconData": {
                     "example": "any",
-                    "description": "Favicondata value."
+                    "description": "Value for `faviconData`."
                   },
                   "loginLogoData": {
                     "example": "any",
-                    "description": "Loginlogodata value."
+                    "description": "Value for `loginLogoData`."
                   },
                   "showSidebarText": {
                     "example": "any",
-                    "description": "Showsidebartext value."
+                    "description": "Value for `showSidebarText`."
                   }
                 }
               }
@@ -4138,7 +4152,7 @@
             "LicenseKeyHeader": []
           }
         ],
-        "summary": "Update Branding Branding",
+        "summary": "Update Branding",
         "operationId": "put_branding",
         "tags": [
           "Branding"
@@ -4147,7 +4161,7 @@
     },
     "/oauth/jira/install": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira install in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4202,7 +4216,7 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Install",
+        "summary": "Get Oauth Jira Install",
         "operationId": "get_oauth_jira_install",
         "tags": [
           "Jira OAuth"
@@ -4211,7 +4225,7 @@
     },
     "/oauth/jira/callback": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira callback in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4235,7 +4249,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Code parameter."
+            "description": "Parameter provided in the query of the request."
           },
           {
             "name": "state",
@@ -4243,7 +4257,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "State parameter."
+            "description": "Parameter provided in the query of the request."
           },
           {
             "name": "x-org-id",
@@ -4285,7 +4299,7 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Callback",
+        "summary": "Get Oauth Jira Callback",
         "operationId": "get_oauth_jira_callback",
         "tags": [
           "Jira OAuth"
@@ -4294,7 +4308,7 @@
     },
     "/oauth/jira/refresh": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira refresh in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4355,7 +4369,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Refresh",
+        "summary": "Create Oauth Jira Refresh",
         "operationId": "post_oauth_jira_refresh",
         "tags": [
           "Jira OAuth"
@@ -4364,7 +4378,7 @@
     },
     "/oauth/jira/disconnect": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira disconnect in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4422,7 +4436,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Disconnect",
+        "summary": "Create Oauth Jira Disconnect",
         "operationId": "post_oauth_jira_disconnect",
         "tags": [
           "Jira OAuth"
@@ -4431,7 +4445,7 @@
     },
     "/oauth/jira/status": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira status in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4483,7 +4497,7 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Status",
+        "summary": "Get Oauth Jira Status",
         "operationId": "get_oauth_jira_status",
         "tags": [
           "Jira OAuth"
@@ -4492,7 +4506,7 @@
     },
     "/oauth/jira/projects": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira projects in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4553,7 +4567,7 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Projects",
+        "summary": "Get Oauth Jira Projects",
         "operationId": "get_oauth_jira_projects",
         "tags": [
           "Jira OAuth"
@@ -4562,7 +4576,7 @@
     },
     "/oauth/jira/projects/{id}": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira projects by id in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "id",
@@ -4632,7 +4646,7 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Projects Id",
+        "summary": "Get Oauth Jira Projects By Id",
         "operationId": "get_oauth_jira_projects_id",
         "tags": [
           "Jira OAuth"
@@ -4641,7 +4655,7 @@
     },
     "/oauth/jira/issues/assigned": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira issues assigned in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4702,7 +4716,7 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Issues Assigned",
+        "summary": "Get Oauth Jira Issues Assigned",
         "operationId": "get_oauth_jira_issues_assigned",
         "tags": [
           "Jira OAuth"
@@ -4711,7 +4725,7 @@
     },
     "/oauth/jira/issues/search": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira issues search in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4769,7 +4783,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Issues Search",
+        "summary": "Create Oauth Jira Issues Search",
         "operationId": "post_oauth_jira_issues_search",
         "tags": [
           "Jira OAuth"
@@ -4778,7 +4792,7 @@
     },
     "/oauth/jira/issues/similar": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira issues similar in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -4827,15 +4841,15 @@
                 "properties": {
                   "projectKey": {
                     "example": "any",
-                    "description": "Projectkey value."
+                    "description": "Value for `projectKey`."
                   },
                   "summary": {
                     "example": "any",
-                    "description": "Summary value."
+                    "description": "Value for `summary`."
                   },
                   "description": {
                     "example": "any",
-                    "description": "Description value."
+                    "description": "Value for `description`."
                   },
                   "limit": {
                     "example": "any",
@@ -4847,7 +4861,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Issues Similar",
+        "summary": "Create Oauth Jira Issues Similar",
         "operationId": "post_oauth_jira_issues_similar",
         "tags": [
           "Jira OAuth"
@@ -4856,7 +4870,7 @@
     },
     "/oauth/jira/issues/{key}": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira issues by id in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "key",
@@ -4865,7 +4879,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Key parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -4923,14 +4937,14 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Issues Key",
+        "summary": "Get Oauth Jira Issues By Id",
         "operationId": "get_oauth_jira_issues_key",
         "tags": [
           "Jira OAuth"
         ]
       },
       "patch": {
-        "description": "Update the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **update** oauth jira issues by id in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "key",
@@ -4939,7 +4953,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Key parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -4997,7 +5011,7 @@
           }
         },
         "security": [],
-        "summary": "Update Jira Oauth Oauth Jira Issues Key",
+        "summary": "Update Oauth Jira Issues By Id",
         "operationId": "patch_oauth_jira_issues_key",
         "tags": [
           "Jira OAuth"
@@ -5006,7 +5020,7 @@
     },
     "/oauth/jira/issues/ingest": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira issues ingest in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5071,7 +5085,7 @@
                 "properties": {
                   "fields": {
                     "example": "any",
-                    "description": "Fields value."
+                    "description": "Value for `fields`."
                   }
                 }
               }
@@ -5079,7 +5093,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Issues Ingest",
+        "summary": "Create Oauth Jira Issues Ingest",
         "operationId": "post_oauth_jira_issues_ingest",
         "tags": [
           "Jira OAuth"
@@ -5088,7 +5102,7 @@
     },
     "/oauth/jira/issues": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira issues in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5146,7 +5160,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Issues",
+        "summary": "Create Oauth Jira Issues",
         "operationId": "post_oauth_jira_issues",
         "tags": [
           "Jira OAuth"
@@ -5155,7 +5169,7 @@
     },
     "/oauth/jira/issues/{key}/comment": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira issues by id comment in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "key",
@@ -5164,7 +5178,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Key parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5222,7 +5236,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Issues Key Comment",
+        "summary": "Create Oauth Jira Issues By Id Comment",
         "operationId": "post_oauth_jira_issues_key_comment",
         "tags": [
           "Jira OAuth"
@@ -5231,7 +5245,7 @@
     },
     "/oauth/jira/issues/{key}/attachments": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira issues by id attachments in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "key",
@@ -5240,7 +5254,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Key parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5305,7 +5319,7 @@
                 "properties": {
                   "files": {
                     "example": "any",
-                    "description": "Files value."
+                    "description": "Value for `files`."
                   }
                 }
               }
@@ -5313,7 +5327,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Issues Key Attachments",
+        "summary": "Create Oauth Jira Issues By Id Attachments",
         "operationId": "post_oauth_jira_issues_key_attachments",
         "tags": [
           "Jira OAuth"
@@ -5322,7 +5336,7 @@
     },
     "/oauth/jira/issues/{key}/transition": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira issues by id transition in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "key",
@@ -5331,7 +5345,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Key parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5389,7 +5403,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Issues Key Transition",
+        "summary": "Create Oauth Jira Issues By Id Transition",
         "operationId": "post_oauth_jira_issues_key_transition",
         "tags": [
           "Jira OAuth"
@@ -5398,7 +5412,7 @@
     },
     "/oauth/jira/issues/{key}/transitions": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth jira issues by id transitions in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "key",
@@ -5407,7 +5421,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Key parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5465,7 +5479,7 @@
           }
         },
         "security": [],
-        "summary": "Get Jira Oauth Oauth Jira Issues Key Transitions",
+        "summary": "Get Oauth Jira Issues By Id Transitions",
         "operationId": "get_oauth_jira_issues_key_transitions",
         "tags": [
           "Jira OAuth"
@@ -5474,7 +5488,7 @@
     },
     "/oauth/jira/webhook": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth jira webhook in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5532,7 +5546,7 @@
           }
         },
         "security": [],
-        "summary": "Create Jira Oauth Oauth Jira Webhook",
+        "summary": "Create Oauth Jira Webhook",
         "operationId": "post_oauth_jira_webhook",
         "tags": [
           "Jira OAuth"
@@ -5541,7 +5555,7 @@
     },
     "/oauth/github/user": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github user in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5569,7 +5583,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github User",
+        "summary": "Get Oauth Github User",
         "operationId": "get_oauth_github_user",
         "tags": [
           "GitHub OAuth"
@@ -5578,7 +5592,7 @@
     },
     "/oauth/github/user/repos": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github user repos in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5606,7 +5620,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github User Repos",
+        "summary": "Get Oauth Github User Repos",
         "operationId": "get_oauth_github_user_repos",
         "tags": [
           "GitHub OAuth"
@@ -5615,7 +5629,7 @@
     },
     "/oauth/github/graphql": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth github graphql in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5643,7 +5657,7 @@
           }
         },
         "security": [],
-        "summary": "Create Github Oauth Oauth Github Graphql",
+        "summary": "Create Oauth Github Graphql",
         "operationId": "post_oauth_github_graphql",
         "tags": [
           "GitHub OAuth"
@@ -5652,7 +5666,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/readme": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github repos by id by id readme in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "owner",
@@ -5661,7 +5675,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Owner parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "repo",
@@ -5670,7 +5684,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Repo parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5698,7 +5712,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Readme",
+        "summary": "Get Oauth Github Repos By Id By Id Readme",
         "operationId": "get_oauth_github_repos_owner_repo_readme",
         "tags": [
           "GitHub OAuth"
@@ -5707,7 +5721,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/contents": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github repos by id by id contents in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "owner",
@@ -5716,7 +5730,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Owner parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "repo",
@@ -5725,7 +5739,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Repo parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5753,7 +5767,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Contents",
+        "summary": "Get Oauth Github Repos By Id By Id Contents",
         "operationId": "get_oauth_github_repos_owner_repo_contents",
         "tags": [
           "GitHub OAuth"
@@ -5762,7 +5776,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/git/trees/{ref}": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github repos by id by id git trees by id in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "owner",
@@ -5771,7 +5785,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Owner parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "repo",
@@ -5780,7 +5794,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Repo parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "ref",
@@ -5789,7 +5803,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Ref parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5817,7 +5831,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Git Trees Ref",
+        "summary": "Get Oauth Github Repos By Id By Id Git Trees By Id",
         "operationId": "get_oauth_github_repos_owner_repo_git_trees_ref",
         "tags": [
           "GitHub OAuth"
@@ -5826,7 +5840,7 @@
     },
     "/oauth/github/repos/{owner}/{repo}/contents/{path}": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github repos by id by id contents by id in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "owner",
@@ -5835,7 +5849,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Owner parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "repo",
@@ -5844,7 +5858,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Repo parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "path",
@@ -5853,7 +5867,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Path parameter."
+            "description": "Parameter provided in the path of the request."
           },
           {
             "name": "license_key",
@@ -5881,7 +5895,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Repos Owner Repo Contents Path",
+        "summary": "Get Oauth Github Repos By Id By Id Contents By Id",
         "operationId": "get_oauth_github_repos_owner_repo_contents_path",
         "tags": [
           "GitHub OAuth"
@@ -5890,7 +5904,7 @@
     },
     "/oauth/github": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5918,7 +5932,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github",
+        "summary": "Get Oauth Github",
         "operationId": "get_oauth_github",
         "tags": [
           "GitHub OAuth"
@@ -5927,7 +5941,7 @@
     },
     "/oauth/github/install": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github install in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5955,7 +5969,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Install",
+        "summary": "Get Oauth Github Install",
         "operationId": "get_oauth_github_install",
         "tags": [
           "GitHub OAuth"
@@ -5964,7 +5978,7 @@
     },
     "/oauth/github/callback": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github callback in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -5988,7 +6002,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "State parameter."
+            "description": "Parameter provided in the query of the request."
           },
           {
             "name": "code",
@@ -5996,7 +6010,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Code parameter."
+            "description": "Parameter provided in the query of the request."
           },
           {
             "name": "x-org-id",
@@ -6032,7 +6046,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Callback",
+        "summary": "Get Oauth Github Callback",
         "operationId": "get_oauth_github_callback",
         "tags": [
           "GitHub OAuth"
@@ -6041,7 +6055,7 @@
     },
     "/oauth/github/contributions": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github contributions in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -6065,7 +6079,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Year parameter."
+            "description": "Parameter provided in the query of the request."
           },
           {
             "name": "x-org-id",
@@ -6110,7 +6124,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Contributions",
+        "summary": "Get Oauth Github Contributions",
         "operationId": "get_oauth_github_contributions",
         "tags": [
           "GitHub OAuth"
@@ -6119,7 +6133,7 @@
     },
     "/oauth/github/status": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github status in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -6155,7 +6169,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Status",
+        "summary": "Get Oauth Github Status",
         "operationId": "get_oauth_github_status",
         "tags": [
           "GitHub OAuth"
@@ -6164,7 +6178,7 @@
     },
     "/oauth/github/repos": {
       "get": {
-        "description": "Get the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **get** oauth github repos in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -6203,7 +6217,7 @@
           }
         },
         "security": [],
-        "summary": "Get Github Oauth Oauth Github Repos",
+        "summary": "Get Oauth Github Repos",
         "operationId": "get_oauth_github_repos",
         "tags": [
           "GitHub OAuth"
@@ -6212,7 +6226,7 @@
     },
     "/oauth/github/repos/sync": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth github repos sync in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -6273,7 +6287,7 @@
           }
         },
         "security": [],
-        "summary": "Create Github Oauth Oauth Github Repos Sync",
+        "summary": "Create Oauth Github Repos Sync",
         "operationId": "post_oauth_github_repos_sync",
         "tags": [
           "GitHub OAuth"
@@ -6282,7 +6296,7 @@
     },
     "/oauth/github/repos/selection": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth github repos selection in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -6347,7 +6361,7 @@
                 "properties": {
                   "repoIds": {
                     "example": "any",
-                    "description": "Repoids value."
+                    "description": "Value for `repoIds`."
                   }
                 }
               }
@@ -6355,7 +6369,7 @@
           }
         },
         "security": [],
-        "summary": "Create Github Oauth Oauth Github Repos Selection",
+        "summary": "Create Oauth Github Repos Selection",
         "operationId": "post_oauth_github_repos_selection",
         "tags": [
           "GitHub OAuth"
@@ -6364,7 +6378,7 @@
     },
     "/oauth/github/disconnect": {
       "post": {
-        "description": "Create the SAML authentication and session flow.\n\nUse these endpoints to configure an IdP, discover an org from user email, initiate login, handle ACS callbacks, and manage logout/session state.\n\nThis endpoint is **public** and does not require authentication.",
+        "description": "Use this endpoint to **create** oauth github disconnect in Atlas Engine.\n\nAuthentication: **not required**.\n\nTip: For debugging, log the non-2xx response body (it often includes actionable error details).",
         "parameters": [
           {
             "name": "license_key",
@@ -6403,7 +6417,7 @@
           }
         },
         "security": [],
-        "summary": "Create Github Oauth Oauth Github Disconnect",
+        "summary": "Create Oauth Github Disconnect",
         "operationId": "post_oauth_github_disconnect",
         "tags": [
           "GitHub OAuth"

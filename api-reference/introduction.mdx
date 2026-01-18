@@ -10,11 +10,27 @@ Use this page to understand how to authenticate, what conventions we follow, and
 
 ## Base URL
 
-Most production requests use:
+Most requests share the same path structure — you only need to change the **base URL** depending on where Atlas is running.
 
-- **Production:** `https://api.atlasengine.ai`
+- **Atlas Cloud (default):** `https://api.atlasengine.ai`
+- **Self‑hosted / On‑prem:** `https://<your-atlas-host>` (example: `https://atlas-api.company.internal`)
+- **Local development:** `http://localhost:<port>` (example: `http://localhost:8080`)
 
-If you’re running locally (Docker/dev), the **paths stay the same**—only the host/port changes.
+### Recommended setup
+
+Define a single environment variable and reuse it across every request:
+
+```bash
+export ATLAS_API_URL="https://api.atlasengine.ai"
+
+# Self-hosted / on-prem example:
+# export ATLAS_API_URL="https://atlas-api.company.internal"
+
+# Local dev example:
+# export ATLAS_API_URL="http://localhost:8080"
+```
+
+> **Tip:** The **paths stay the same** across environments — only the host/port changes.
 
 ---
 
@@ -23,7 +39,7 @@ If you’re running locally (Docker/dev), the **paths stay the same**—only the
 Most endpoints require a **Bearer token**.
 
 ```bash
-curl -X GET "https://api.atlasengine.ai/healthz" \
+curl -X GET "$ATLAS_API_URL/healthz" \
   -H "Authorization: Bearer <YOUR_TOKEN>"
 ```
 
@@ -47,7 +63,7 @@ Use:
 Example:
 
 ```bash
-curl -X POST "https://api.atlasengine.ai/<endpoint>" \
+curl -X POST "$ATLAS_API_URL/<endpoint>" \
   -H "Authorization: Bearer <YOUR_TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{"example": true}'
@@ -109,7 +125,7 @@ Explore endpoints grouped by tags.
 To verify connectivity:
 
 ```bash
-curl -sS "https://api.atlasengine.ai/healthz"
+curl -sS "$ATLAS_API_URL/healthz"
 ```
 
 ---
